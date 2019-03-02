@@ -6,7 +6,7 @@ for(var i=1; i <= 11; i++){
   arrayDiv.id = 'mySlides fade' + i;
   arrayDiv.className = 'mySlides fade';
   elem = document.createElement('img');
-  elem.setAttribute("src", "mygraphic/" + i + ".jpg");
+  elem.setAttribute("src", "https://github.com/vivekgautham/vivekgautham.github.io/blob/master/mygraphic/" + i + ".jpg");
   elem.setAttribute("width", "1000");
   elem.setAttribute("id", "photo" + i);
   arrayDiv.appendChild(elem);
