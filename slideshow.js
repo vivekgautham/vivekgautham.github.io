@@ -30,7 +30,7 @@ getExif("photo" + slideIndex);
 
 function plusSlides(n) {
   showSlides(slideIndex += n);
-  getExif("photo" + slideIndex);
+  //getExif("photo" + slideIndex);
 }
 
 function currentSlide(n) {
