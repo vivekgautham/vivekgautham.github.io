@@ -26,7 +26,7 @@ document.getElementById("slide1").appendChild(elem);
 
 var slideIndex = 1;
 showSlides(slideIndex);
-getExif("photo" + slideIndex);
+//getExif("photo" + slideIndex);
 
 function plusSlides(n) {
   showSlides(slideIndex += n);
