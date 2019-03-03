@@ -74,7 +74,8 @@ function convertToFraction(x){
   numerator /= factor;
   return numerator + "/" + denominator;
 }
-
+/*
 window.onload = function () {
   getExif("photo1");
 };
+*/
