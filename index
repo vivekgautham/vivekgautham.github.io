@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
 	<script src="https://use.fontawesome.com/7951220893.js"></script>
@@ -9,9 +10,9 @@
   
   <div id="mySidenav" class="sidenav">
 	  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-	  <a href="index.html">About <i class="fa fa-id-card" aria-hidden="true"></i></a>
+	  <a href="index">About <i class="fa fa-id-card" aria-hidden="true"></i></a>
 	  <a href="#">Posts</a>
-	  <a href="pics.html">Photography <i class="fa fa-camera-retro" aria-hidden="true"></i></i> </a>
+	  <a href="pics">Photography <i class="fa fa-camera-retro" aria-hidden="true"></i></i> </a>
 	  <a href="http://www.github.com/vivekgautham">Github <i class="fa fa-github" aria-hidden="true"></i></a>
   </div>
 
