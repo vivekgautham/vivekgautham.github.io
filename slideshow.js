@@ -1,7 +1,7 @@
 
 var arrayDiv;
 
-for(var i=1; i <= 11; i++){
+for(var i=1; i <= 12; i++){
   arrayDiv = document.createElement('div');
   arrayDiv.id = 'mySlides fade' + i;
   arrayDiv.className = 'mySlides fade';
