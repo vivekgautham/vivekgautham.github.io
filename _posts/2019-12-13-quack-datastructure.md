@@ -70,10 +70,4 @@ Otherwise, move on to check if *arr3* is empty, If so, recursively pop and appen
 **Space/Runtime complexity:**
 
 - Space complexity is O(N) because for each element that is pushed, we store an extra copy in *arr2*.
-- Time: 
-
-    *push* : O(1);  
-
-    *pop*  : as long as *total* is not 0, *arr1* is never empty. When *total*  is 0, we need to clear both *arr1* and *arr3*, which takes O(N)           time. This only happens following N pop or pull operations. So, pop has amortized O(1) time. 
-
-    *pull* : similar to pop when it comes to total being zero. In addition, it takes another O(N) time to pop and append contents from *arr2*            to *arr3*. So, pull also has amortized O(1) time.
+- Time: *push* is O(1); For *pop* as long as *total* is not 0, *arr1* is never empty. When *total*  is 0, we need to clear both *arr1* and *arr3*, which takes O(N) time. This only happens following N pop or pull operations. So, pop has amortized O(1) time; *pull* is similar to pop when it comes to total being zero. In addition, it takes another O(N) time to pop and append contents from *arr2* to *arr3*. So, pull also has amortized O(1) time.
