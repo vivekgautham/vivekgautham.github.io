@@ -12,9 +12,9 @@ Quack is an unique data structure that combines the properties of both Stack and
 - *pop*  - remove an element from the left end of the structure
 - *pull* - remove an element from the right end of the structure
 
-The great thing about this data structure is that these operations can be elegantly implemented using three stacks (or lists in Python), performing at amortized O(1)time. Here we are going to look at the technique of this implementation in Python.
+The great thing about this data structure is that these operations can be elegantly implemented using three stacks (or lists in Python), performing at amortized O(1)time. Here we are going to look at the implementation technique in Python.
 
-Let's declare a class for Quack in Python. The key thing to note here is *total* variable. This will let us keep track of elements in the structure. 
+Let's declare a class for Quack in Python. The key thing to note here is *total* variable. This will let us keep track of elements present in the structure. 
 
 ```python
 @dataclass
@@ -26,7 +26,7 @@ class Quack(object):
     total: int = 0
 ```
 
-When we do push operation, we append to both *arr1* and *arr2*. Then, increment the *total* by 1.
+When we do a push operation, we append to both *arr1* and *arr2*. Then, increment the *total* by 1.
 
 ```python
     def push(self, elem):
@@ -35,8 +35,8 @@ When we do push operation, we append to both *arr1* and *arr2*. Then, increment 
         self.total += 1
 ```
 
-When we do pop operation, we first check if *total* is 0. If so, we clear both *arr1* and *arr3* and raise Exception.
-Otherwise, move on to pop an element from *arr2* if non empty; decrement the *total* and return poped element from *arr1*
+When we do a pop operation, we first check if *total* is 0. If so, we clear both *arr1* and *arr3* and raise Exception.
+Otherwise, move on to pop an element from *arr2* if non empty; decrement the *total* and return popped element from *arr1*
 
 ```python
     def pop(self):
@@ -51,8 +51,8 @@ Otherwise, move on to pop an element from *arr2* if non empty; decrement the *to
         return self.arr1.pop()
 ```
 
-When we do pull operation, we first check if *total* is 0. If so, we clear both *arr1* and *arr3* and raise Exception.
-Otherwise, move on to check if *arr3* is empty, If so, recursively pop and append contents of *arr2* to *arr3*; ; decrement the *total* and return poped element from *arr1*
+When we do a pull operation, we first check if *total* is 0. If so, we clear both *arr1* and *arr3* and raise Exception.
+Otherwise, move on to check if *arr3* is empty, If so, recursively pop and append contents of *arr2* to *arr3*; ; decrement the *total* and return popped element from *arr1*
 
 ```python
     def pull(self):
@@ -70,4 +70,4 @@ Otherwise, move on to check if *arr3* is empty, If so, recursively pop and appen
 **Space/Runtime complexity:**
 
 - Space complexity is O(N) because for each element that is pushed, we store an extra copy in *arr2*.
-- Time: *push* is O(1); For *pop* as long as *total* is not 0, *arr1* is never empty. When *total*  is 0, we need to clear both *arr1* and *arr3*, which takes O(N) time. This only happens following N pop or pull operations. So, pop has amortized O(1) time; *pull* is similar to pop when it comes to total being zero. In addition, it takes another O(N) time to pop and append contents from *arr2* to *arr3*. So, pull also has amortized O(1) time.
+- Time: *push* is O(1); For *pop* as long as *total* is not 0, *arr1* is never empty. When *total*  is 0, we need to clear both *arr1* and *arr3*, which takes O(N) time. This only happens following N pop or pull operations. So, pop has amortized O(1) time; *pull* is similar to pop when it comes to total being zero. In addition to this, it takes another O(N) time to pop and append contents from *arr2* to *arr3*. So, pull also has amortized O(1) time.
