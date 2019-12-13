@@ -6,12 +6,11 @@ date: 2019-12-13
 
 Quack is an unique data structure that combines the properties of both Stack and a Queue. The structure can be viewed as a list of items written from left to right. 
 
-<dl>
-  <dt>It lets you perform following three operations on the structure.</dt>
-  <dd>push - add an element on to the left side of the structure</dd>
-  <dd>pop  - remove an element from the left end of the structure</dd>
-  <dd>pull - remove an element from the right end of the structure</dd>
-</dl>
+**It lets you perform following three operations on the structure.**
+
+- *push* - add an element on to the left side of the structure
+- *pop*  - remove an element from the left end of the structure
+- *pull* - remove an element from the right end of the structure
 
 The great thing about this data structure is that these operations can be elegantly implemented using three stacks (or lists in Python), performing at amortized O(1)time. Here we are going to look at the technique of this implementation in Python.
 
@@ -67,3 +66,12 @@ Otherwise, move on to check if *arr3* is empty, If so, recursively pop and appen
         self.total -= 1
         return self.arr3.pop()
 ```
+
+**Space/Runtime complexity:**
+
+- Space complexity is O(N) as for each element that is pushed, we store an extra copy in *arr2*.
+
+- Time: 
+    - *push*: O(1);  
+    - *pop*: as long as *total* is not 0, *arr1* is never empty. When *total*  is 0, we need to clear both *arr1* and *arr3*, which takes O(N) time. This only happens following N pop or pull operations. So, pop has amortized O(1) time. 
+    - *pull*: similar to pop when it comes to total being zero. In addition, it takes another O(N) time to pop and append contents from *arr2* to *arr3*. So, pull also has amortized O(1) time.
