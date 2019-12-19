@@ -79,7 +79,7 @@ Among plenty of misnomers in C++, *std::weak_ptr* is one. The ideal name I could
 because *std::weak_ptr* is essentially a ticket to receive a *std::shared_ptr* of the object sometime in the future, provided that
 object still exists.
 
-Lot of people actually wonder Why on earth would we need *std::weak_ptr*? There is actually a valid use case especially when we are working on a large scale software. For instance, say we have a factory function that creates relative expensive object. As object creation is expensive, we are caching/pooling *std::shared_ptr* that we have returned to clients. But, in this case, we make the cached pointer *std::weak_ptr* as they can tell us about the object's lifetime - meaning, when the clients of this factory function is done using the object, the cached pointer will dangle. But, when the object still has life, we will be able to acquire or receive a *std::shared_ptr* of the object from the *std::weak_ptr* we hold.
+Lot of people actually wonder - why on earth would we need *std::weak_ptr*? There is actually a valid use case especially when we are working on a large scale software. For instance, say we have a factory function that creates relatively expensive object. As object creation is expensive, we are caching or pooling *std::shared_ptr* that we have returned to clients. But, in this case, we make the cached pointer *std::weak_ptr* as they can tell us about the object's lifetime - meaning, when the clients of this factory function is done using the object, the cached pointer will dangle. But, when the object still has life, we will be able to acquire or receive a *std::shared_ptr* of the object from the *std::weak_ptr* we hold.
 
 
 
