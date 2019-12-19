@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "C++ Smart Pointers - What do they do and How they work?"
+title: "C++ Smart Pointers - What they do and How they work?"
 date: 2019-12-18
 ---
 
