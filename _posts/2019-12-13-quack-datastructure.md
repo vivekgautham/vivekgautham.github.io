@@ -5,6 +5,10 @@ date: 2019-12-13
 categories: [Datastructures]
 tags: [Datastructures, Python]
 ---
+<p>
+Quack is an unique data structure that combines the properties of both Stack and a Queue. The structure can be viewed as a list of items written from left to right.
+</p>
+<!--more-->
 
 Quack is an unique data structure that combines the properties of both Stack and a Queue. The structure can be viewed as a list of items written from left to right.
 

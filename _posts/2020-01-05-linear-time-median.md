@@ -5,7 +5,8 @@ date: 2020-01-05
 categories: [Algorithms]
 tags: [Algorithms, Python]
 ---
-<p>This is the excerpt.</p>
+<p>
+Median is considered one of the important measures in Statistics. Unlike Mean, it is not skewed by a few very large values in the dataset. Computing Median can seem like a trivial problem and it is trivial if the dataset (array) is sorted. If it is not sorted, it may not be trivial.</p>
 <!--more-->
 
 Median is considered one of the important measures in Statistics. Unlike Mean, it is not skewed by a few very large values in the dataset. Computing Median can seem like a trivial problem and it is trivial if the dataset (array) is sorted. If it is not sorted, it may not be trivial. Sorting an array, as you know, will take _O(nlogn)_ time. But thinking about median computation, we don't need to sort the entire array. We just need to make sure that median elements (middle one if length of array is odd and middle two elements if array length is even) is in their right place.
