@@ -5,10 +5,6 @@ date: 2020-04-18
 categories: [C++]
 tags: [Templates]
 ---
-<p>
-One of the remarkable features of Modern C++ is **variadic templates**. Ability of templates to take variable number of was initially designed by __Douglas Gregor__ and __Jaakko Järvi__ and then standardized in Modern C++.
-</p>
-<!--more-->
 
 One of the remarkable features of Modern C++ is **variadic templates**. Ability of templates to take variable number of was initially designed by __Douglas Gregor__ and __Jaakko Järvi__ and then standardized in Modern C++. This powerful tool has wide variety of cases such as recursive templates, variadic datastructures and catch-all functions. We'll talk about catch-all functions in this post.
 
