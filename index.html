@@ -2,7 +2,7 @@
 layout: default
 title: Vivek Soundararaj
 ---
-<h3>Recent Posts</h3>
+<h4>Recent Posts</h4>
 {% for post in site.posts %}
 	<p class="excerpt">{{ post.content | markdownify | truncatewords: 20 }}<a href="{{ post.url }}">Read more</a></p>
 {% endfor %}
