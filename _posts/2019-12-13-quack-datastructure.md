@@ -2,9 +2,11 @@
 layout: post
 title: "Quack - A Queue and a Stack in one"
 date: 2019-12-13
+categories: [Datastructures]
+tags: [Datastructures, Python]
 ---
 
-Quack is an unique data structure that combines the properties of both Stack and a Queue. The structure can be viewed as a list of items written from left to right. 
+Quack is an unique data structure that combines the properties of both Stack and a Queue. The structure can be viewed as a list of items written from left to right.
 
 **It lets you perform following three operations on the structure.**
 
@@ -14,7 +16,7 @@ Quack is an unique data structure that combines the properties of both Stack and
 
 The great thing about this data structure is that these operations can be elegantly implemented using three stacks (or lists in Python), performing at amortized O(1)time. Here we are going to look at the implementation technique in Python.
 
-Let's declare a class for Quack in Python. The key thing to note here is *total* variable. This will let us keep track of elements present in the structure. 
+Let's declare a class for Quack in Python. The key thing to note here is *total* variable. This will let us keep track of elements present in the structure.
 
 ```python
 @dataclass
@@ -44,7 +46,7 @@ Otherwise, move on to pop an element from *arr2* if non empty; decrement the *to
             del self.arr1[:]
             del self.arr3[:]
             raise Exception("Nothing to pop")
-        
+
         if self.arr2:
             self.arr2.pop()
         self.total -= 1

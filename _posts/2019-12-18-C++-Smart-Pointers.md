@@ -2,6 +2,8 @@
 layout: post
 title: "C++ Smart Pointers - What they do and How they work?"
 date: 2019-12-18
+categories: [C++]
+tags: [C++, Smartpointers]
 ---
 
 I recently had a chance to watch an interesting CppCon lecture by Arthur O'Dwyer titled __Back__ __To__ __Basics:__ __Smart__ __Pointers__. Atleast for me, the talk was a pretty good review/refresher of what Smart Pointers are capable of and how they operate. In the talk, Arthur
