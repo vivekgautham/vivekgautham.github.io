@@ -4,5 +4,5 @@ title: Vivek Soundararaj
 ---
 <h3>Recent Posts</h3>
 {% for post in site.posts %}
-	<p class="excerpt">{{ post.content | markdownify | truncatewords: 40 }}<a href="{{ post.url }}">Read more</a></p>
+	<p class="excerpt">{{ post.content | markdownify | truncatewords: 20 }}<a href="{{ post.url }}">Read more</a></p>
 {% endfor %}
