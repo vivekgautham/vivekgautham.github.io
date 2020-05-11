@@ -4,6 +4,5 @@ title: Vivek Soundararaj
 ---
 
 {% for post in site.posts %}
-	{{ post.content | markdownify | strip_html | truncatewords: 50 }} <a href="{{ post.url }}">...Read more </a>
-	<br>
+	<p class="excerpt">{{ post.content | markdownify | strip_html | truncatewords: 50 }} <a href="{{ post.url }}">...Read more </a></p>
 {% endfor %}
