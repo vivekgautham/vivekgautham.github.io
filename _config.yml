@@ -5,4 +5,4 @@ name: Vivek Soundararaj
 markdown: kramdown
 permalink: /blog/:year/:month/:day/:title
 excerpt_separator: <!--more-->
-remote_theme: thelehhman/texture
+remote_theme: benbalter/retlab
