@@ -2,8 +2,4 @@
 layout: bio
 title: Resume
 ---
-<h4>{{ page.title }}</h4>
-
-{% for resume in site.resume %}
-    <p>{{ resume.content }}</p>
-{% endfor %}
+{% include_relative ../resume.md %}
