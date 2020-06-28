@@ -6,3 +6,4 @@ markdown: kramdown
 permalink: /blog/:year/:month/:day/:title
 excerpt_separator: <!--more-->
 remote_theme: benbalter/retlab
+theme: jekyll-theme-minimal
