@@ -31,4 +31,5 @@ ul.posts li { list-style: none; margin: 12px; }
 p.excerpt{
     border-bottom: 4px solid rgb(5, 143, 5);
     background-color: rgb(57, 82, 11);
+    font-family: 'Lora', 'Times New Roman', serif;
 }
