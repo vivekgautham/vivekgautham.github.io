@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: bio
 title: Vivek Soundararaj - Software Engineer
 ---
 
