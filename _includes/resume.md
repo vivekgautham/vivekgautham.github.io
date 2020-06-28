@@ -1,7 +1,3 @@
----
-layout: bio
-title: Vivek Soundararaj - Software Engineer
----
 
 I am a Software Engineer with over 3 years experience in Financial Services Industry.
 

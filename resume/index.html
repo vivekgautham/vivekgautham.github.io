@@ -1,5 +1,10 @@
 ---
-layout: bio
-title: Resume
+layout: default
+title: Vivek Resume
 ---
-{% include_relative ../resume.md %}
+
+<body>
+    <div class="container">
+      {% include markdown.html path="_includes/resume.md" selector="section" id="intro" classes="full-height" %}
+    </div>
+</body>
