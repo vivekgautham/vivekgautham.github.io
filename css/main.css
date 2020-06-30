@@ -3,10 +3,10 @@ body { margin: 60px auto; width: 70%; }
 a { text-decoration: none; color: #999; }
 a:hover { text-decoration: underline; }
 
-p, ul { font-size: 1.2em; line-height: 1.1em; color: #333; font-family: 'Lora', 'Times New Roman', serif;}
+p, ul { font-size: 1.2em; line-height: 1.1em; color: #333; font-family: 'Trebuchet MS', 'Verdana', 'sans-serif';}
 
-h1, h2, h3, h4 { font-family: 'Helvetica', 'Arial', 'Sans-Serif'; }
-h1 { font-size: 2.4em;  }
+h1, h2, h3, h4 { font-family: 'Trebuchet MS', 'Verdana', 'sans-serif'; }
+h1 { font-size: 2.4em; }
 h2 { font-size: 2.0em; }
 h3 { font-size: 1.7em; }
 h4 { font-size: 1.3em; }
