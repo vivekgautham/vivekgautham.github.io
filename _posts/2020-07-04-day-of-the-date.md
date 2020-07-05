@@ -24,7 +24,9 @@ The variable _vy_ here represents month index of a year. But, that's weird, why 
 
 First, we get into the meat of the formula where we adjust for the leap year. Explanation behind this part __y/4 - y/100 + y/400__ is fairly simple.
 
-- _Divisible by 4_ --> then Leap Year, add 1 --> _Divisible by 100_, subtract 1 as its non-leap -> unless _Divisible by 400_, add 1 as its leap year.
+- _Divisible by 4_ --> then Leap Year, add 1
+- _Divisible by 100_, subtract 1 as its non-leap
+- Unless _Divisible by 400_, add 1 as its leap year
 
 Before we dig into rest of the formula, lets clarify what our function returns. Our function is goint to be returning integer ranging from 0-6 where 0 denotes Sunday & 6 is Saturday. [Year Y=1](https://www.timeanddate.com/calendar/?year=1&country=22) in Gregorian calendar _(Year Y=0 doesn't exist)_. Given any year, the same date next year will be the next day (_365%7 = 1_), unless the given year/next year is a leap year, in which case it shifts two days or one day depending on whether date falling in January/February or March to December. In order to avoid this complexity, if we consider March to be the start of the year, January & February to be the last two months of previous year, we can always add 1 to the end if its given year/previous year is leap year. As we set the concept of __Virtual Year__ clear, now, all it comes down to is
 
