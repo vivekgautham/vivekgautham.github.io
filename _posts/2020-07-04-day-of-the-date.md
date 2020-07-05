@@ -39,7 +39,7 @@ And finally, what is the mystery __vy[m-1])*2.6-0.2__?  This is where we do proj
 
 So, essentially we get the above sequence of days, which incidentically equals to floor(2.6*{11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10} - 0.2).
 
-
+_Keep Calm and Start Coding_
 
 
 
