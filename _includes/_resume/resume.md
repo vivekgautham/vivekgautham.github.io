@@ -20,6 +20,7 @@ _Tools_ - gdb/lldb, Valgrind, Tshark, CMake
 _Libraries & Frameworks_ - Boost, OpenMP, MPI, SciPy Ecosystem, AMPS
 
 **Education**
+
 _M.S. in Computer Engineering (GPA: 3.9/4.0) - Clemson University, Clemson, South Carolina, USA_
   Object Oriented Software Design • Database Management Systems • Parallel Systems
   Parallel Architecture • Computer Network Security • Penetration Testing
