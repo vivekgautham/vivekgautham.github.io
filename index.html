@@ -1,8 +1,22 @@
 ---
-layout: default
+layout: home
 title: Vivek Soundararaj
 ---
-<h4>Recent Posts</h4>
-{% for post in site.posts %}
-	<p class="excerpt">{{ post.content | markdownify | truncatewords: 20 }}<a href="{{ post.url }}">Read more</a></p>
-{% endfor %}
+
+<div class="row">
+	<div class="leftcolumn">
+		{% for post in site.posts %}
+		<div class="card">
+			<h3>post.title</h3>
+			<div class="fakeimg" style="height:100px;">{{ post.content | markdownify | truncatewords: 50 }}</div>
+			<p><a href="{{ post.url }}">Read more</a></p>
+		</div>
+	</div>
+	<div class="rightcolumn">
+	  <div class="card">
+		<h2>About Me</h2>
+		<div class="fakeimg" style="height:100px;">Image</div>
+		<p>Blah..</p>
+	  </div>
+	</div>
+</div>

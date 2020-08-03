@@ -54,7 +54,7 @@ Otherwise, move on to pop an element from *arr2* if non empty; decrement the *to
 ```
 
 When we do a pull operation, we first check if *total* is 0. If so, we clear both *arr1* and *arr3* and raise Exception.
-Otherwise, move on to check if *arr3* is empty, If so, recursively pop and append contents of *arr2* to *arr3*; ; decrement the *total* and return popped element from *arr1*
+Otherwise, move on to check if *arr3* is empty, If so, recursively pop and append contents of *arr2* to *arr3*; ; decrement the *total* and return popped element from *arr3*
 
 ```python
     def pull(self):
