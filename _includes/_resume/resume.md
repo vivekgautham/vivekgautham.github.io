@@ -13,11 +13,13 @@ of mid-size companies that are part of middle market lending facilities.
 & equity indices) to help trading desk with their hedging strategy.
 - Developed Risk Reporting system to report risk of over thousands of positions in CLO trading books.
 
-_Programming Languages_ - Python, C++, C, JavaScript, PHP
-_Databases_ - Microsoft SQL Server, MySQL, Object DB
-_Source Control_ - CVS, Git
-_Tools_ - gdb/lldb, Valgrind, Tshark, CMake
-_Libraries & Frameworks_ - Boost, OpenMP, MPI, SciPy Ecosystem, AMPS
+**Programming Skills**
+
+- _Programming Languages_ - Python, C++, C, JavaScript, PHP
+- _Databases_ - Microsoft SQL Server, MySQL, Object DB
+- _Source Control_ - CVS, Git
+- _Tools_ - gdb/lldb, Valgrind, Tshark, CMake
+- _Libraries & Frameworks_ - Boost, OpenMP, MPI, SciPy Ecosystem, AMPS
 
 **Education**
 
