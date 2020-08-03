@@ -1,6 +1,7 @@
 _I am a self-driven and team oriented software developer having skill set and passion for writing clean code and build systems that are efficient, scalable and maintainable._
 
 **Bank of America, New York City, USA July'16 - Present**
+
 _Software Engineer III – Fixed Income Technology_
 
 - Designed and built Data Ingestion framework and data pipes enabling flow of thousands of collateral
