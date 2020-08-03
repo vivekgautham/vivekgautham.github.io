@@ -17,7 +17,7 @@ of mid-size companies that are part of middle market lending facilities.
 
 - _Programming Languages_ - Python, C++, C, JavaScript, PHP
 - _Databases_ - Microsoft SQL Server, MySQL, Object DB
-- _Source Control_ - CVS, Git
+- _Source Control_ - CVS, Git, SVN
 - _Tools_ - gdb/lldb, Valgrind, Tshark, CMake
 - _Libraries & Frameworks_ - Boost, OpenMP, MPI, SciPy Ecosystem, AMPS
 
