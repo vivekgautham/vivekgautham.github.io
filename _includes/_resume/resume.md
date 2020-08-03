@@ -24,8 +24,8 @@ of mid-size companies that are part of middle market lending facilities.
 **Education**
 
 _M.S. in Computer Engineering (GPA: 3.9/4.0) - Clemson University, Clemson, South Carolina, USA_
-  Object Oriented Software Design • Database Management Systems • Parallel Systems
-  Parallel Architecture • Computer Network Security • Penetration Testing
+  - Object Oriented Software Design • Database Management Systems • Parallel Systems
+  - Parallel Architecture • Computer Network Security • Penetration Testing
 
 **Publications**
 
