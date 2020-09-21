@@ -1,0 +1,115 @@
+I"�5<p>One of the remarkable features of Modern C++ is <strong>variadic templates</strong>. Ability of templates to take variable number of was initially designed by <strong>Douglas Gregor</strong> and <strong>Jaakko Järvi</strong> and then standardized in Modern C++. This powerful tool has wide variety of cases such as recursive templates, variadic datastructures and catch-all functions. We’ll talk about catch-all functions in this post.</p>
+
+<p>Let’s create a generic print function that prints any STL containers from below.</p>
+
+<ul>
+  <li>array</li>
+  <li>vector</li>
+  <li>list</li>
+  <li>deque</li>
+  <li>set</li>
+  <li>map</li>
+  <li>multiset</li>
+  <li>multimap</li>
+  <li>unordered_set</li>
+  <li>unordered_map</li>
+  <li>unordered_multiset</li>
+  <li>unordered_multimap</li>
+  <li>stack</li>
+  <li>queue</li>
+  <li>priority_queue</li>
+  <li>tuple</li>
+</ul>
+
+<p>First, lets start with printing a vector/list/deque. The following print function which takes <strong>template &lt;typename, typename&gt; class Container</strong>, <strong>typename Value</strong> and <strong>typename Allocator</strong> should work.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="p">,</span> <span class="k">typename</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Container</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Value</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Allocator</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">Container</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Allocator</span><span class="o">&gt;&amp;</span> <span class="n">container</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">elem</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">elem</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="p">,</span> <span class="k">typename</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Container</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Value</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Allocator</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">Container</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Allocator</span><span class="o">&gt;&amp;</span> <span class="n">container</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">"["</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">each</span><span class="o">:</span> <span class="n">container</span><span class="p">){</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">each</span><span class="p">);</span>
+        <span class="n">print</span><span class="p">(</span><span class="s">","</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">"]"</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>But, if we try to print map/set/multiset/multimap and its unordered counterparts, it won’t work. This is because they take more than 2 arguments in their templates - 3 in the case of sets and 4 in the case or maps. <strong>Variadic templates</strong> to the rescue here. We modify the above code to take variable number of template arguments. We additionally add code to print std::pair, this should suffice printing maps and sets.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">U</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Container</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Value</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">Args</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">Container</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Args</span><span class="p">...</span><span class="o">&gt;&amp;</span> <span class="n">container</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">"["</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">each</span><span class="o">:</span> <span class="n">container</span><span class="p">){</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">each</span><span class="p">);</span>
+        <span class="n">print</span><span class="p">(</span><span class="s">","</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">"]"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">U</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">"("</span><span class="p">);</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">first</span><span class="p">);</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">","</span><span class="p">);</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">")"</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<p>Now we are left with handling array and tuple. Printing array is should be easy, we add the following and we should be okay.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">SIZE</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">SIZE</span><span class="o">&gt;&amp;</span> <span class="n">ar</span><span class="p">);</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">SIZE</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">SIZE</span><span class="o">&gt;&amp;</span> <span class="n">array</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">"["</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">each</span><span class="o">:</span> <span class="n">array</span><span class="p">){</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">each</span><span class="p">);</span>
+        <span class="n">print</span><span class="p">(</span><span class="s">","</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">"]"</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Printing tuple is little tricky. Again, <strong>variadic templates</strong> to the rescue here. With the sophistication C++17 gives us, we use <strong>std::index_sequence/std::index_sequence_for</strong> to do template parameter pack expansion.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tuple</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">...</span> <span class="n">Is</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print_tuple_impl</span><span class="p">(</span><span class="k">const</span> <span class="n">Tuple</span><span class="o">&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">index_sequence</span><span class="o">&lt;</span><span class="n">Is</span><span class="p">...</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="p">(</span><span class="n">print</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Is</span><span class="o">&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="p">(</span><span class="n">Is</span> <span class="o">==</span> <span class="mi">0</span><span class="o">?</span> <span class="s">""</span> <span class="o">:</span> <span class="s">" "</span><span class="p">))),</span> <span class="p">...);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="err">...</span> <span class="nc">Args</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Args</span><span class="p">...</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">print_tuple_impl</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">index_sequence_for</span><span class="o">&lt;</span><span class="n">Args</span><span class="p">...</span><span class="o">&gt;</span><span class="p">{});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Variadic templates</strong> could be quite useful in lot of cases. I encourage myself and other Cpp programmers to explore and experiment with this feature.</p>
+
+<p><em>Keep Calm and Start Coding</em></p>
+:ET

@@ -1,0 +1,83 @@
+I"W#<p>I recently had a chance to watch an interesting CppCon lecture by Arthur O’Dwyer titled <strong>Back</strong> <strong>To</strong> <strong>Basics:</strong> <strong>Smart</strong> <strong>Pointers</strong>. Atleast for me, the talk was a pretty good review/refresher of what Smart Pointers are capable of and how they operate. In the talk, Arthur
+summarized all the smart pointers in a neat, succinct way. I thought writing the below article would be a good way to cement my understanding of smart pointers.</p>
+
+<p><strong>As you all may know, following are the Smart Pointers available in C++ today</strong></p>
+
+<ul>
+  <li><em>std::unique_ptr</em>  - use it for “Exclusive-Ownership Resource Management” (Scott Meyers’ EMC++ Item 18)</li>
+  <li><em>std::shared_ptr</em>  - use it for “Shared-Ownership Resource Management” (Scott Meyers’ EMC++ Item 19)</li>
+  <li><em>std::weak_ptr</em>    - use it for “std::shared_ptr like pointers that can dangle” (Scott Meyers’ EMC++ Item 20)</li>
+</ul>
+
+<p><strong>std::unique_ptr</strong></p>
+
+<p>One of the elegant things about <em>std::unique_ptr</em> is how <em>“Transfer of Ownership”</em> is made seamless.</p>
+
+<ul>
+  <li><em>std::unique_ptr</em> is non copyable but only movable; Moving a std::unique_ptr transfers ownership to destination leaving source in an undefined state.</li>
+</ul>
+
+<p>Another elegant thing is its ability to accept custom deleters.</p>
+
+<ul>
+  <li>Not all resources are same. There are resources which need to be treated in a special way when its deleted or released.</li>
+</ul>
+
+<p>For example, your code may look like the below code using C Style I/O. Here we could utilize the unique to manage exclusive ownership of the file pointer. Custom Deleter comes in handy here to perform file closing automatically, once we are done reading or writing from the file pointer we got from unique_ptr.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">//ModernC++/item18.h file</span>
+
+<span class="k">struct</span> <span class="n">FileCloser</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="kt">FILE</span><span class="o">*</span> <span class="n">fp</span><span class="p">){</span>
+        <span class="n">assert</span> <span class="p">(</span><span class="n">fp</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">fclose</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"File Closed using custom File Closer"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">FILE</span><span class="p">,</span> <span class="n">FileCloser</span><span class="o">&gt;</span> <span class="n">make_unique_file_ptr</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fileMode</span><span class="p">){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Creating Unique File Ptr"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">fileName</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">FILE</span><span class="p">,</span> <span class="n">FileCloser</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">fopen</span><span class="p">(</span><span class="n">fileName</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">fileMode</span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
+<span class="p">}</span>
+
+<span class="c1">//main.cpp file</span>
+
+<span class="cp">#include "ModernC++/item18.h"
+</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">auto</span> <span class="n">fptr</span> <span class="o">=</span> <span class="n">make_unique_file_ptr</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"./Files/demo.txt"</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"r"</span><span class="p">));</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">fptr</span><span class="p">){</span>
+        <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">fgetc</span><span class="p">(</span><span class="n">fptr</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><em>std::unique_ptr</em> also comes with an added advantage of efficiently converting to a <em>std::shared_ptr</em>.</p>
+
+<p><strong>std::shared_ptr</strong></p>
+
+<p>The design of the <em>std::shared_ptr</em> is fascinating. Unlike <em>std::unique_ptr</em>, <em>std::shared_ptr</em> doesn’t take ownership of controlled object. It essentially participates in reference counted or otherwise shared ownership of control block (i.e. only one heap allocated control block) which in turn is responsible of managing the controlled object.</p>
+
+<p>When you copy a <em>std::shared_ptr</em>, ownership of control block is shared.</p>
+
+<p>Like <em>std::unique_ptr</em>, <em>std::shared_ptr</em> also can be provided a custom deleter.</p>
+
+<p><strong>Factory Functions</strong></p>
+
+<p>Always use <em>std::make_unique</em>, <em>std::make_shared</em> to create <em>std::unique_ptr</em> and <em>std::shared_ptr</em>. There are few reasons behind this. The main reason is, it just looks cleaner. We have avoided the usage of <em>delete</em>. So, Why keep using <em>new</em> in our code, when it has been abstracted away for us. Also, there are allocation efficiencies when using <em>std::make_shared</em>.</p>
+
+<p><strong>std::weak_ptr</strong></p>
+
+<p>Among plenty of misnomers in C++, <em>std::weak_ptr</em> is one. The ideal name I could think of is <em>std::aspiring_shared_ptr</em>. I am using this name
+because <em>std::weak_ptr</em> is essentially a ticket to receive a <em>std::shared_ptr</em> of the object sometime in the future, provided that
+object still exists.</p>
+
+<p>Lot of people actually wonder - why on earth would we need <em>std::weak_ptr</em>? There is actually a valid use case especially when we are working on a large scale software. For instance, say we have a factory function that creates relatively expensive object. As object creation is expensive, we are caching or pooling <em>std::shared_ptr</em> that we have returned to clients. But, in this case, we make the cached pointer <em>std::weak_ptr</em> as they can tell us about the object’s lifetime - meaning, when the clients of this factory function is done using the object, the cached pointer will dangle. But, when the object still has life, we will be able to acquire or receive a <em>std::shared_ptr</em> of the object from the <em>std::weak_ptr</em> we hold.</p>
+
+:ET
