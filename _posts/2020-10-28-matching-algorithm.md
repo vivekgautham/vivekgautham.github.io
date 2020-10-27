@@ -13,7 +13,7 @@ The above discussed logic can be picturized like this. For the input [200, 100, 
 
 ![Cartesian Matching Algorithm](https://i.ibb.co/JBy2Lkr/aww-board.png)
 
-So, we take those two out and add [5, 6] to our list of matches. Algorithm proceeds like this until we are left with one or zero input data.
+So, we take those two out and add [5, 6] to our list of matches. We keep going until we are left with one or zero input data.
 
 Here is the Cpp code that implements the above logic.
 
@@ -72,3 +72,8 @@ Here is the Cpp code that implements the above logic.
     }
 
 ```
+
+The intuitiveness of this alorithm comes from the fact that it can be easily picturized.
+
+**Runtime complexity:**
+- As it involves sorting as well keep running until we get to less than or equal to 1 data point, the time complexity is *O(n*n*log(n))*
