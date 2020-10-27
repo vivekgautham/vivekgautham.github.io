@@ -11,7 +11,7 @@ Every now and then I encounter algorithms that is both intuitive as well as far-
 
 The above discussed logic can be picturized like this.
 
-![Cartesian Matching](https://ibb.co/VjQDyBM)
+![Cartesian Matching Algorithm](https://i.ibb.co/JBy2Lkr/aww-board.png)
 
 Here is the Cpp code that implements the algo.
 
