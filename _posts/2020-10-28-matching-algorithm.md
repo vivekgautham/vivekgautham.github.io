@@ -6,7 +6,7 @@ categories: [Math, Algorithms, C++]
 tags: [Matching]
 ---
 
-Every now and then, I encounter algorithms that is both intuitive as well as far-reaching. The algorithm to be discussed in this post is called Cartesian Matching Algorithm. Bear with me here, as this is not the official matching algorithm. I encountered this as a daily challenge in CodeSignal. The way it works is you simply map the given input data of numeric values on to a catesian x axis, assuming its an array of numbers. After this step, grow a circle of unit radius in every step/iteration. If there are intersections between two circles, you take those out and match them together.
+Every now and then I encounter algorithms that is both intuitive as well as far-reaching. The algorithm to be described in this post is called Cartesian Matching Algorithm. Bear with me here, as this is not the official name of the matching algorithm. I encountered this as a daily challenge in CodeSignal. As Cartesian axis is pivotal to intuitiveness of this algorithm, I named it that way. How it works is you simply map the given input data of numeric values on to a catesian x-axis, assuming its an array of numbers. After this step, grow a circle starting at unit radius. In every step/iteration, if there are intersections between two circles, you take those out and match them together.
 
 
 The above discussed logic can be picturized like this.
