@@ -76,4 +76,4 @@ Here is the Cpp code that implements the above logic.
 The intuitiveness of this alorithm comes from the fact that it can be easily picturized.
 
 **Runtime complexity:**
-- As it involves sorting as well keep running until we get to less than or equal to 1 data point, the time complexity is *O(n*n*log(n))*
+- As it involves sorting as well keep running until we get to less than or equal to 1 data point, the time complexity is _O(n*n*log(n))_
