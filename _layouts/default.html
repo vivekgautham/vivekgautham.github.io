@@ -1,31 +1,193 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>{{ page.title }}</title>
-        <!-- link to main stylesheet -->
-        <link rel="stylesheet" type="text/css" href="/css/main.css">
-        <script src="https://use.fontawesome.com/7951220893.js"></script>
-    </head>
-    <body>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/blog">Journal</a></li>
-            </ul>
-        </nav>
-        <hr>
-        <div class="container">
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title and page.title != site.title %}{{ page.title }} · {{ site.name }}{% else %}{{ site.title }}{% endif %}</title>
+  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+  
+  <!-- Canonical & Social Meta -->
+  <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.name }}{% endif %}">
+  <meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet with Cache-Buster -->
+  <link rel="stylesheet" type="text/css" href="{{ '/css/main.css' | relative_url }}?v=4.0">
 
+  <!-- Immediate Theme Initializer (Avoids FOUC) -->
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="site-wrapper">
+    <!-- Header Navigation -->
+    <header class="site-header">
+      <div class="site-container">
+        <div class="header-inner">
+          <a href="/" class="site-brand" title="Vivek Soundararaj Home">
+            <span class="brand-avatar">VS</span>
+            <span class="brand-name">Vivek Soundararaj</span>
+          </a>
+
+          <nav class="site-nav">
+            <ul class="nav-links">
+              <li><a href="/" class="nav-link {% if page.url == '/' or page.url == '' %}active{% endif %}">Home</a></li>
+              <li><a href="/blog" class="nav-link {% if page.url contains '/blog' %}active{% endif %}">Journal</a></li>
+            </ul>
+
+            <!-- Dark / Light Mode Switcher -->
+            <button id="theme-toggle-btn" class="theme-toggle" type="button" aria-label="Toggle Dark / Light Theme" title="Toggle theme">
+              <!-- Sun Icon (shown in dark mode) -->
+              <svg class="icon-sun" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <!-- Moon Icon (shown in light mode) -->
+              <svg class="icon-moon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="site-main">
+      <div class="site-container">
         {{ content }}
+      </div>
+    </main>
 
-        </div><!-- /.container -->
-        <footer>
-            <ul>
-                <li><a href="mailto:vivegau@gmail.com">Email</a></li>
-                <li><a href="https://github.com/vivekgautham">Github</a></li>
-                <li><a href="https://www.linkedin.com/in/vsoundararaj/">LinkedIn</a></li>
-                <li><a href="https://500px.com/vivekgautham">500px</a></li>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="site-container">
+        <div class="footer-inner">
+          <div class="footer-top">
+            <div class="footer-brand">Vivek Soundararaj</div>
+            <ul class="footer-links">
+              <li><a href="mailto:vivegau@gmail.com" class="footer-link">Email</a></li>
+              <li><a href="https://github.com/vivekgautham" class="footer-link" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><a href="https://www.linkedin.com/in/vsoundararaj/" class="footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
             </ul>
-        </footer>
-    </body>
+          </div>
+          <div class="footer-bottom">
+            <span>© {{ 'now' | date: "%Y" }} Vivek Soundararaj · All rights reserved.</span>
+            <span>Crafted with Jekyll &amp; Vanilla CSS</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Interactive Scripts: Theme Switcher & Code Copier -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. Theme Switcher
+      var toggleBtn = document.getElementById('theme-toggle-btn');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+          var currentTheme = document.documentElement.getAttribute('data-theme');
+          var targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', targetTheme);
+          try {
+            localStorage.setItem('theme', targetTheme);
+          } catch(e) {}
+        });
+      }
+
+      // 2. Code Block Enhancement & Copy Button
+      var codeBlocks = document.querySelectorAll('pre, .highlight, div[class*="language-"]');
+      codeBlocks.forEach(function(block) {
+        if (block.closest('.code-block-wrapper')) return;
+        
+        var pre = block.tagName === 'PRE' ? block : block.querySelector('pre');
+        if (!pre) return;
+
+        var wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper';
+
+        var header = document.createElement('div');
+        header.className = 'code-header';
+
+        var langContainer = block.closest('[class*="language-"]') || block;
+        var langMatch = (langContainer.className || '').match(/language-([a-zA-Z0-9_\+#]+)/);
+        var lang = (langMatch && langMatch[1]) ? langMatch[1] : 'CODE';
+
+        var langSpan = document.createElement('span');
+        langSpan.textContent = lang.toUpperCase();
+
+        var copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-code-btn';
+        copyBtn.setAttribute('type', 'button');
+        copyBtn.innerHTML = '<span>Copy</span>';
+
+        copyBtn.addEventListener('click', function() {
+          var codeText = pre.innerText;
+          var onCopied = function() {
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = '<span>✓ Copied</span>';
+            setTimeout(function() {
+              copyBtn.classList.remove('copied');
+              copyBtn.innerHTML = '<span>Copy</span>';
+            }, 2000);
+          };
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(codeText).then(onCopied).catch(function() {
+              copyFallback(codeText, onCopied);
+            });
+          } else {
+            copyFallback(codeText, onCopied);
+          }
+        });
+
+        function copyFallback(text, cb) {
+          var textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          try {
+            document.execCommand('copy');
+            cb();
+          } catch (e) {}
+          document.body.removeChild(textarea);
+        }
+
+        header.appendChild(langSpan);
+        header.appendChild(copyBtn);
+
+        block.parentNode.insertBefore(wrapper, block);
+        wrapper.appendChild(header);
+        wrapper.appendChild(block);
+      });
+    });
+  </script>
+</body>
 </html>

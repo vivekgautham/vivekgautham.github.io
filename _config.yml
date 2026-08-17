@@ -1,7 +1,21 @@
-plugins:
-  - jekyll-remote-theme
-
 name: Vivek Soundararaj
+title: Vivek Soundararaj · Systems & Algorithms
+description: Notes on modern C++, algorithms, data structures, and systems engineering by Vivek Soundararaj.
+url: "https://vivekgautham.github.io"
+author:
+  name: Vivek Soundararaj
+  email: vivegau@gmail.com
+  github: vivekgautham
+  linkedin: vsoundararaj
+
 markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
 permalink: /blog/:year/:month/:day/:title
 excerpt_separator: <!--more-->
