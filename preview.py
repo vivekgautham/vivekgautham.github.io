@@ -183,7 +183,7 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
                 tags_list = post.get('tags') or post.get('categories') or []
                 if isinstance(tags_list, str):
                     tags_list = [tags_list]
-                tags_html = "".join([f'<span class="tag-badge">#{t}</span>' for t in tags_list[:2]])
+                tags_html = "".join([f'<span class="tag-badge">{t}</span>' for t in tags_list[:2]])
                 tags_block = f'<span class="meta-separator">•</span><div class="post-tags">{tags_html}</div>' if tags_list else ''
                 words = len(post['content'].split())
                 rt = max(1, words // 200)
@@ -201,12 +201,6 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
                     </div>
                   </header>
                   <p class="post-excerpt">{excerpt}</p>
-                  <div class="post-card-footer">
-                    <a href="{post['url']}" class="read-more-link">
-                      <span>Read full article</span>
-                      <span class="arrow">&rarr;</span>
-                    </a>
-                  </div>
                 </article>
                 """
                 
@@ -232,7 +226,7 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
                 tags_list = post.get('tags') or post.get('categories') or []
                 if isinstance(tags_list, str):
                     tags_list = [tags_list]
-                tags_html = "".join([f'<span class="tag-badge">#{t}</span>' for t in tags_list])
+                tags_html = "".join([f'<span class="tag-badge">{t}</span>' for t in tags_list])
                 tags_block = f'<span class="meta-separator">•</span><div class="post-tags">{tags_html}</div>' if tags_list else ''
                 words = len(post['content'].split())
                 rt = max(1, words // 200)
@@ -250,12 +244,6 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
                     </div>
                   </header>
                   <p class="post-excerpt">{excerpt}</p>
-                  <div class="post-card-footer">
-                    <a href="{post['url']}" class="read-more-link">
-                      <span>Read full article</span>
-                      <span class="arrow">&rarr;</span>
-                    </a>
-                  </div>
                 </article>
                 """
                 
@@ -275,7 +263,7 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
                 next_post = posts[i-1] if i > 0 else None
                 
                 post_html = post['html_content']
-                tags_chips = "".join([f'<span class="tag-badge">#{t}</span>' for t in (post['tags'] or post['categories'])])
+                tags_chips = "".join([f'<span class="tag-badge">{t}</span>' for t in (post['tags'] or post['categories'])])
                 words = len(post['content'].split())
                 rt = max(1, words // 200)
                 

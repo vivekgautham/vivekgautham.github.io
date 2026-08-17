@@ -43,14 +43,14 @@ layout: default
         <span class="meta-dot">·</span>
         <div class="post-tags">
           {% for tag in page.tags %}
-            <span class="tag-badge">#{{ tag }}</span>
+            <span class="tag-badge">{{ tag }}</span>
           {% endfor %}
         </div>
       {% elsif page.categories and page.categories.size > 0 %}
         <span class="meta-dot">·</span>
         <div class="post-tags">
           {% for cat in page.categories %}
-            <span class="tag-badge">#{{ cat }}</span>
+            <span class="tag-badge">{{ cat }}</span>
           {% endfor %}
         </div>
       {% endif %}
