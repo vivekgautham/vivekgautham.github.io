@@ -144,10 +144,12 @@ def render_layout(layout_name, content, page_meta):
     
     rendered = rendered.replace("{{ content }}", content)
     
-    # Strip any unresolved liquid conditional tags for cleaner local HTML
-    rendered = re.sub(r'\{%\s*if\s+page\.url\s+contains\s+\'/blog\'\s*%\}\s*active\s*\{%\s*endif\s*%\}', 'active' if page_meta.get('url', '') == '/blog' else '', rendered)
-    rendered = re.sub(r'\{%\s*if\s+page\.url\s*==\s*\'/\'\s*or\s+page\.url\s*==\s*\'\'\s*%\}\s*active\s*\{%\s*endif\s*%\}', 'active' if page_meta.get('url', '') == '/' else '', rendered)
-    rendered = re.sub(r'\{%\s*if.*?%\}(.*?)\{%\s*endif\s*%\}', r'\1', rendered, flags=re.DOTALL)
+    # Evaluate liquid conditional tags for active navigation
+    cur_url = page_meta.get('url', '/')
+    rendered = re.sub(r'\{%\s*if\s+page\.url\s*==\s*\'/\'\s*or\s+page\.url\s*==\s*\'\'\s*%\}\s*active\s*\{%\s*endif\s*%\}', 'active' if cur_url in ['/', ''] else '', rendered)
+    rendered = re.sub(r'\{%\s*if\s+page\.url\s+contains\s+\'/blog\'\s*%\}\s*active\s*\{%\s*endif\s*%\}', 'active' if '/blog' in cur_url else '', rendered)
+    rendered = re.sub(r'\{%\s*if\s+page\.url\s+contains\s+\'/projects\'\s*%\}\s*active\s*\{%\s*endif\s*%\}', 'active' if '/projects' in cur_url else '', rendered)
+    rendered = re.sub(r'\{%\s*if.*?%\}.*?\{%\s*endif\s*%\}', '', rendered, flags=re.DOTALL)
     rendered = re.sub(r'\{%.*?%\}', '', rendered)
     rendered = re.sub(r'\{\{.*?\}\}', '', rendered)
     
@@ -250,6 +252,18 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
             content = body
             content = re.sub(r'\{%\s*for post in site\.posts\s*%\}.*?\{%\s*endfor\s*%\}', feed_html, content, flags=re.DOTALL)
             full_html = render_layout('default', content, {'title': 'Journal & Writing · Vivek Soundararaj', 'url': '/blog'})
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(full_html.encode('utf-8'))
+            return
+
+        # Projects Page
+        if url_path == '/projects':
+            projects_file = BASE_DIR / 'projects' / 'index.html'
+            raw = projects_file.read_text(encoding='utf-8')
+            fm, body = parse_frontmatter(raw)
+            full_html = render_layout('default', body, {'title': fm.get('title', 'Projects & Tools · Vivek Soundararaj'), 'url': '/projects'})
             self.send_response(200)
             self.send_header('Content-Type', 'text/html; charset=utf-8')
             self.end_headers()
