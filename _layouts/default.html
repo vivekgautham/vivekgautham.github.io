@@ -18,15 +18,14 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
   
   <!-- Stylesheet with Cache-Buster -->
-  <link rel="stylesheet" type="text/css" href="{{ '/css/main.css' | relative_url }}?v=4.0">
+  <link rel="stylesheet" type="text/css" href="{{ '/css/main.css' | relative_url }}?v=4.1">
 
-  <!-- Immediate Theme Initializer (Avoids FOUC) -->
+  <!-- Immediate Theme Initializer (Defaults to Light Mode) -->
   <script>
     (function() {
       try {
         var savedTheme = localStorage.getItem('theme');
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        if (savedTheme === 'dark') {
           document.documentElement.setAttribute('data-theme', 'dark');
         } else {
           document.documentElement.setAttribute('data-theme', 'light');
@@ -93,6 +92,7 @@
               <li><a href="mailto:vivegau@gmail.com" class="footer-link">Email</a></li>
               <li><a href="https://github.com/vivekgautham" class="footer-link" target="_blank" rel="noopener noreferrer">GitHub</a></li>
               <li><a href="https://www.linkedin.com/in/vsoundararaj/" class="footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+              <li><a href="https://500px.com/p/vivekgautham" class="footer-link" target="_blank" rel="noopener noreferrer">500px</a></li>
             </ul>
           </div>
           <div class="footer-bottom">

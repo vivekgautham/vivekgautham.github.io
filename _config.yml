@@ -1,12 +1,13 @@
 name: Vivek Soundararaj
-title: Vivek Soundararaj · Systems & Algorithms
-description: Notes on modern C++, algorithms, data structures, and systems engineering by Vivek Soundararaj.
+title: Vivek Soundararaj · Tech, Finance, Economics, Math & Photography
+description: Essays and notes on technology, finance, investing, economics, mathematics, and photography by Vivek Soundararaj.
 url: "https://vivekgautham.github.io"
 author:
   name: Vivek Soundararaj
   email: vivegau@gmail.com
   github: vivekgautham
   linkedin: vsoundararaj
+  fivehundredpx: https://500px.com/p/vivekgautham
 
 markdown: kramdown
 highlighter: rouge

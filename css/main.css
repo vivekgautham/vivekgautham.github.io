@@ -92,43 +92,6 @@
   --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg-page: #0b0f17;
-    --bg-surface: #111726;
-    --bg-surface-hover: #1b2337;
-    --bg-surface-active: #242f49;
-    --bg-elevated: #161e31;
-
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-tertiary: #64748b;
-    --text-inverse: #0b0f17;
-
-    --accent: #60a5fa;
-    --accent-hover: #93c5fd;
-    --accent-subtle: rgba(96, 165, 250, 0.12);
-    --accent-border: rgba(96, 165, 250, 0.25);
-
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-default: rgba(255, 255, 255, 0.14);
-    --border-focus: rgba(96, 165, 250, 0.4);
-
-    --tag-bg: rgba(96, 165, 250, 0.12);
-    --tag-text: #93c5fd;
-    --tag-border: rgba(96, 165, 250, 0.2);
-
-    --code-bg: #070a0f;
-    --code-text: #f1f5f9;
-    --code-inline-bg: rgba(255, 255, 255, 0.09);
-    --code-inline-text: #93c5fd;
-
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
-    --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.6);
-  }
-}
-
 /* --------------------------------------------------------------------------
    2. Reset & Global Base Styles
    -------------------------------------------------------------------------- */
@@ -208,8 +171,7 @@ a:focus-visible, button:focus-visible {
   transition: background-color var(--transition-base), border-color var(--transition-base);
 }
 
-[data-theme="dark"] .site-header,
-:root:not([data-theme="light"]) .site-header {
+[data-theme="dark"] .site-header {
   background-color: rgba(11, 15, 23, 0.85);
 }
 
@@ -312,18 +274,20 @@ a:focus-visible, button:focus-visible {
   stroke: currentColor;
 }
 
+.theme-toggle .icon-sun {
+  display: none;
+}
+
 .theme-toggle .icon-moon {
-  display: none;
-}
-
-[data-theme="dark"] .theme-toggle .icon-sun,
-:root:not([data-theme="light"]) .theme-toggle .icon-sun {
-  display: none;
-}
-
-[data-theme="dark"] .theme-toggle .icon-moon,
-:root:not([data-theme="light"]) .theme-toggle .icon-moon {
   display: block;
+}
+
+[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle .icon-moon {
+  display: none;
 }
 
 /* --------------------------------------------------------------------------

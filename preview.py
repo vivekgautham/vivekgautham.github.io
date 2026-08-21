@@ -133,8 +133,8 @@ def render_layout(layout_name, content, page_meta):
     rendered = rendered.replace("{{ page.date | date: \"%B %d, %Y\" }}", page_meta.get('date_formatted', ''))
     rendered = rendered.replace("{{ page.date | date_to_string }}", page_meta.get('date_formatted', ''))
     rendered = rendered.replace("{{ site.name }}", "Vivek Soundararaj")
-    rendered = rendered.replace("{{ site.title }}", "Vivek Soundararaj · Systems & Algorithms")
-    rendered = rendered.replace("{{ site.description }}", "Notes on modern C++, algorithms, data structures, and systems engineering.")
+    rendered = rendered.replace("{{ site.title }}", "Vivek Soundararaj · Tech, Finance, Economics, Math & Photography")
+    rendered = rendered.replace("{{ site.description }}", "Essays and notes on technology, finance, investing, economics, mathematics, and photography.")
     rendered = rendered.replace("{{ '/css/main.css' | relative_url }}", "/css/main.css")
     rendered = rendered.replace("{{ 'now' | date: \"%Y\" }}", "2026")
     
