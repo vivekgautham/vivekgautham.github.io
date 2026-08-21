@@ -10,6 +10,16 @@ title: Projects & Tools
   </p>
 </header>
 
+<script>
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
+  window.addEventListener('load', function() {
+    window.scrollTo(0, 0);
+  });
+</script>
+
 <div class="projects-grid">
   <!-- Project 1: Calculators & Simulators -->
   <article class="project-card">
@@ -66,7 +76,7 @@ title: Projects & Tools
         </a>
       </div>
       <div class="preview-viewport">
-        <iframe src="https://vivekgautham.github.io/calculators/" title="Adv. Calculators & Simulators Preview" loading="lazy"></iframe>
+        <iframe src="https://vivekgautham.github.io/calculators/" title="Adv. Calculators & Simulators Preview" loading="lazy" tabindex="-1" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
         <a href="https://vivekgautham.github.io/calculators/" class="preview-overlay" target="_blank" rel="noopener noreferrer">
           <span class="preview-overlay-btn">
             <span>Open Live App</span>
@@ -146,7 +156,7 @@ title: Projects & Tools
         </a>
       </div>
       <div class="preview-viewport">
-        <iframe src="https://vivekgautham.github.io/countries/" title="Countries & Global Data Explorer Preview" loading="lazy"></iframe>
+        <iframe src="https://vivekgautham.github.io/countries/" title="Countries & Global Data Explorer Preview" loading="lazy" tabindex="-1" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
         <a href="https://vivekgautham.github.io/countries/" class="preview-overlay" target="_blank" rel="noopener noreferrer">
           <span class="preview-overlay-btn">
             <span>Open Live App</span>
