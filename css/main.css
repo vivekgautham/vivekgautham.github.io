@@ -1075,6 +1075,55 @@ a:focus-visible, button:focus-visible {
   margin-bottom: 0;
 }
 
+/* Prose Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.92rem;
+}
+
+.prose thead {
+  background-color: var(--bg-surface-hover);
+}
+
+.prose th {
+  color: var(--text-primary);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 2px solid var(--border-default);
+  letter-spacing: -0.01em;
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.prose td {
+  padding: 0.95rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: middle;
+  line-height: 1.6;
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.prose tbody tr:hover {
+  background-color: var(--bg-surface-hover);
+}
+
 /* Inline Code */
 :not(pre) > code {
   font-family: var(--font-mono);
