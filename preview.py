@@ -38,24 +38,75 @@ def parse_frontmatter(content):
     return {}, content
 
 def markdown_to_html(md_text):
+    math_placeholders = []
+    def save_math(match):
+        idx = len(math_placeholders)
+        math_placeholders.append(match.group(0))
+        return f'XYZMATHPLACEHOLDER{idx}ZYX'
+
+    # 1. Stash Display Math ($$...$$) and Inline Math ($...$)
+    md_text = re.sub(r'\$\$[\s\S]*?\$\$', save_math, md_text)
+    md_text = re.sub(r'(?<!\$)\$(?!\$)[^\$\n]+?\$', save_math, md_text)
+
+    # 2. Code Blocks
     def code_repl(match):
         lang = (match.group(1) or 'code').strip()
         code = html.escape(match.group(2).strip('\n'))
         return f'<div class="language-{lang} highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{code}</code></pre></div></div>'
     
     md_text = re.sub(r'```([a-zA-Z0-9_\+#\s]*)\n(.*?)```', code_repl, md_text, flags=re.DOTALL)
+    
+    # 3. Headings
     md_text = re.sub(r'^####\s+(.+)$', r'<h4>\1</h4>', md_text, flags=re.MULTILINE)
     md_text = re.sub(r'^###\s+(.+)$', r'<h3>\1</h3>', md_text, flags=re.MULTILINE)
     md_text = re.sub(r'^##\s+(.+)$', r'<h2>\1</h2>', md_text, flags=re.MULTILINE)
     md_text = re.sub(r'^#\s+(.+)$', r'<h1>\1</h1>', md_text, flags=re.MULTILINE)
+    
+    # 4. Bold & Italic (protect words with internal underscores like filenames)
     md_text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', md_text)
     md_text = re.sub(r'__(.+?)__', r'<strong>\1</strong>', md_text)
     md_text = re.sub(r'\*(.+?)\*', r'<em>\1</em>', md_text)
-    md_text = re.sub(r'_(.+?)_', r'<em>\1</em>', md_text)
+    md_text = re.sub(r'(?<![a-zA-Z0-9/._-])_([^_]+?)_(?![a-zA-Z0-9/._-])', r'<em>\1</em>', md_text)
     md_text = re.sub(r'`([^`]+)`', r'<code>\1</code>', md_text)
     md_text = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', r'<img src="\2" alt="\1">', md_text)
     md_text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', md_text)
     
+    # 5. Tables support
+    def parse_tables(text):
+        lines = text.split('\n')
+        out = []
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            if '|' in line and i + 1 < len(lines) and re.match(r'^\s*\|?\s*[-:]+[-| :]*\s*\|?\s*$', lines[i+1]):
+                headers = [h.strip() for h in line.strip('| \t').split('|')]
+                align_line = lines[i+1]
+                i += 2
+                rows = []
+                while i < len(lines) and '|' in lines[i] and lines[i].strip():
+                    row = [c.strip() for c in lines[i].strip('| \t').split('|')]
+                    rows.append(row)
+                    i += 1
+                
+                tbl_html = ['<div class="table-wrapper"><table><thead><tr>']
+                for h in headers:
+                    tbl_html.append(f'<th>{h}</th>')
+                tbl_html.append('</tr></thead><tbody>')
+                for r in rows:
+                    tbl_html.append('<tr>')
+                    for c in r:
+                        tbl_html.append(f'<td>{c}</td>')
+                    tbl_html.append('</tr>')
+                tbl_html.append('</tbody></table></div>')
+                out.append(''.join(tbl_html))
+            else:
+                out.append(line)
+                i += 1
+        return '\n'.join(out)
+
+    md_text = parse_tables(md_text)
+
+    # 6. Lists
     lines = md_text.split('\n')
     in_list = False
     new_lines = []
@@ -74,18 +125,25 @@ def markdown_to_html(md_text):
     if in_list:
         new_lines.append('</ul>')
     
+    # 7. Paragraphs
     paragraphs = '\n'.join(new_lines).split('\n\n')
     processed_p = []
     for p in paragraphs:
         p = p.strip()
         if not p:
             continue
-        if p.startswith('<') and (p.startswith('<h') or p.startswith('<ul') or p.startswith('<div') or p.startswith('<blockquote') or p.startswith('<img')):
+        if p.startswith('<') and (p.startswith('<h') or p.startswith('<ul') or p.startswith('<div') or p.startswith('<blockquote') or p.startswith('<img') or p.startswith('<table')):
             processed_p.append(p)
         else:
             processed_p.append(f'<p>{p.replace("\n", "<br>")}</p>')
             
-    return '\n'.join(processed_p)
+    result = '\n'.join(processed_p)
+
+    # 8. Restore Math Placeholders
+    for idx, math_content in enumerate(math_placeholders):
+        result = result.replace(f'XYZMATHPLACEHOLDER{idx}ZYX', math_content)
+
+    return result
 
 def load_posts():
     posts_dir = BASE_DIR / '_posts'
@@ -167,8 +225,8 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
             
         posts = load_posts()
         
-        # Static files (CSS, JS, images)
-        if self.path.startswith('/css/') or self.path.endswith('.css') or self.path.endswith('.js') or self.path.endswith('.png') or self.path.endswith('.jpg'):
+        # Static files (CSS, JS, images, SVGs, webp, fonts)
+        if self.path.startswith('/css/') or self.path.startswith('/images/') or self.path.endswith(('.css', '.js', '.png', '.jpg', '.jpeg', '.svg', '.gif', '.ico', '.webp', '.woff', '.woff2')):
             rel_path = self.path.lstrip('/').split('?')[0]
             local_file = BASE_DIR / rel_path
             if local_file.exists():

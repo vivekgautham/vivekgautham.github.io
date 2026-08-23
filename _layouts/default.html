@@ -20,6 +20,11 @@
   <!-- Stylesheet with Cache-Buster -->
   <link rel="stylesheet" type="text/css" href="{{ '/css/main.css' | relative_url }}?v=4.1">
 
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true}], ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'], throwOnError: false});"></script>
+
   <!-- Immediate Theme Initializer (Defaults to Light Mode) -->
   <script>
     (function() {
