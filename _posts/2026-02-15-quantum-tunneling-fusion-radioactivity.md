@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Quantum Tunneling: How Particles Cheat the Coulomb Barrier to Power the Sun and Drive Radioactivity"
-date: 2026-08-23
+date: 2026-02-15
 categories: [Physics, Quantum Mechanics]
 tags: [Quantum Tunneling, Nuclear Fusion, Radioactivity, Coulomb Barrier, Gamow Peak, Astrophysics]
 ---

@@ -1124,6 +1124,30 @@ a:focus-visible, button:focus-visible {
   background-color: var(--bg-surface-hover);
 }
 
+/* Article Images & Diagrams */
+.prose img {
+  display: block;
+  max-width: 78%;
+  width: auto;
+  height: auto;
+  margin: 2rem auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.prose img:hover {
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+  .prose img {
+    max-width: 100%;
+    margin: 1.5rem auto;
+  }
+}
+
 /* Inline Code */
 :not(pre) > code {
   font-family: var(--font-mono);
