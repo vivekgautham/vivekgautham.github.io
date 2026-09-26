@@ -1382,8 +1382,6 @@ public:
 
 ## Conclusion
 
-Patterns are not fixed language syntax—they are shared architectural vocabularies:
-
 1. **In Python:** First-class functions, metaclasses, decorators, and `__slots__` replace heavy class scaffolding.
 2. **In Java:** Strong static typing, `records`, functional interfaces, and concurrency primitives (`ConcurrentHashMap`, `CopyOnWriteArrayList`) provide robust, thread-safe enterprise implementations.
 3. **In C++:** RAII, smart pointers (`std::unique_ptr`, `std::shared_ptr`), templates, and move semantics eliminate memory management hazards while maximizing execution performance.
