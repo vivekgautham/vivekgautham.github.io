@@ -1211,15 +1211,19 @@ a:focus-visible, button:focus-visible {
 
 pre {
   margin: 0;
-  padding: 1.25rem 1.25rem;
+  padding: 1.25rem 1.35rem;
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: 0.88rem;
-  line-height: 1.6;
-  color: var(--code-text);
+  line-height: 1.68;
+  color: #e2e8f0;
   background-color: var(--code-bg);
   border-radius: var(--radius-md);
   tab-size: 4;
+  -moz-tab-size: 4;
+  -webkit-hyphens: none;
+  hyphens: none;
+  white-space: pre;
 }
 
 pre code {
@@ -1229,19 +1233,88 @@ pre code {
   padding: 0;
   border: none;
   color: inherit;
+  display: block;
+  white-space: inherit;
 }
 
-/* Syntax Highlighting Tokens (Rouge Compatible) */
-.highlight { background-color: var(--code-bg); border-radius: var(--radius-md); }
-.highlight .c, .highlight .cm, .highlight .c1, .highlight .cs { color: #71717a; font-style: italic; }
-.highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv { color: #f43f5e; font-weight: 600; }
-.highlight .kt, .highlight .nc, .highlight .ne { color: #38bdf8; font-weight: 600; }
-.highlight .s, .highlight .sa, .highlight .sb, .highlight .sc, .highlight .s1, .highlight .s2, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx { color: #a3e635; }
-.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .il { color: #fb923c; }
-.highlight .na, .highlight .nf, .highlight .fm { color: #60a5fa; }
-.highlight .o, .highlight .ow { color: #f472b6; }
-.highlight .nb, .highlight .no, .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi { color: #e2e8f0; }
-.highlight .nn { color: #e2e8f0; }
+/* ==========================================================================
+   Syntax Highlighting: Modern Developer Theme (Rouge & Highlight.js)
+   ========================================================================== */
+.highlight, pre code.hljs {
+  background-color: var(--code-bg);
+  border-radius: var(--radius-md);
+}
+
+/* Comments & Documentation */
+.highlight .c, .highlight .cm, .highlight .c1, .highlight .cs, .highlight .cp, .highlight .cpf,
+.hljs-comment, .hljs-quote {
+  color: #64748b !important;
+  font-style: italic;
+}
+
+/* Keywords & Control Flow */
+.highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv,
+.hljs-keyword, .hljs-selector-tag {
+  color: #f43f5e !important;
+  font-weight: 600;
+}
+
+/* Classes, Interfaces, Types, Exceptions */
+.highlight .kt, .highlight .nc, .highlight .ne,
+.hljs-type, .hljs-class .hljs-title, .hljs-title.class_, .hljs-title.class_.inherited__ {
+  color: #38bdf8 !important;
+  font-weight: 600;
+}
+
+/* Function & Method Definitions */
+.highlight .na, .highlight .nf, .highlight .fm,
+.hljs-function .hljs-title, .hljs-title.function_ {
+  color: #60a5fa !important;
+  font-weight: 600;
+}
+
+/* Strings, Characters, Regex */
+.highlight .s, .highlight .sa, .highlight .sb, .highlight .sc, .highlight .s1, .highlight .s2,
+.highlight .se, .highlight .sh, .highlight .si, .highlight .sx, .highlight .sr,
+.hljs-string, .hljs-regexp {
+  color: #34d399 !important;
+}
+
+/* Numbers & Numeric Literals */
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .il,
+.hljs-number, .hljs-literal {
+  color: #fb923c !important;
+}
+
+/* Operators & Punctuation */
+.highlight .o, .highlight .ow,
+.hljs-operator, .hljs-punctuation {
+  color: #ec4899 !important;
+  font-weight: 500;
+}
+
+/* Decorators, Annotations, Preprocessor Directives */
+.highlight .nd, .highlight .ni,
+.hljs-meta, .hljs-meta .hljs-keyword, .hljs-meta .hljs-string {
+  color: #c084fc !important;
+  font-weight: 600;
+}
+
+/* Builtins & Language Keywords (self, cls, this, super) */
+.highlight .nb, .highlight .bp,
+.hljs-built_in, .hljs-variable.language_ {
+  color: #a78bfa !important;
+}
+
+/* Variables, Properties, Identifiers */
+.highlight .no, .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .nn,
+.hljs-variable, .hljs-property, .hljs-attr {
+  color: #e2e8f0;
+}
+
+.hljs-params {
+  color: #cbd5e1;
+}
 
 /* Post Navigation (Next / Prev) */
 .post-navigation {

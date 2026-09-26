@@ -18,12 +18,15 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
   
   <!-- Stylesheet with Cache-Buster -->
-  <link rel="stylesheet" type="text/css" href="{{ '/css/main.css' | relative_url }}?v=4.2">
+  <link rel="stylesheet" type="text/css" href="{{ '/css/main.css' | relative_url }}?v=4.4">
 
   <!-- KaTeX for Math Rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true}], ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'], throwOnError: false});"></script>
+
+  <!-- Highlight.js for Syntax Highlighting (Local with CDN Fallback) -->
+  <script src="{{ '/js/highlight.min.js' | relative_url }}"></script>
 
   <!-- Immediate Theme Initializer (Defaults to Light Mode) -->
   <script>
@@ -126,7 +129,22 @@
         });
       }
 
-      // 2. Code Block Enhancement & Copy Button
+      // 2. Syntax Highlighting (Local Highlight.js for raw code blocks)
+      function highlightBlocks() {
+        if (typeof hljs !== 'undefined') {
+          document.querySelectorAll('pre code').forEach(function(codeEl) {
+            if (!codeEl.querySelector('span')) {
+              hljs.highlightElement(codeEl);
+            }
+          });
+        }
+      }
+      highlightBlocks();
+      if (typeof hljs === 'undefined') {
+        window.addEventListener('load', highlightBlocks);
+      }
+
+      // 3. Code Block Enhancement & Copy Button
       var codeBlocks = document.querySelectorAll('pre, .highlight, div[class*="language-"]');
       codeBlocks.forEach(function(block) {
         if (block.closest('.code-block-wrapper')) return;

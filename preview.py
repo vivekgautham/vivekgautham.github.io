@@ -48,30 +48,44 @@ def markdown_to_html(md_text):
     md_text = re.sub(r'\$\$[\s\S]*?\$\$', save_math, md_text)
     md_text = re.sub(r'(?<!\$)\$(?!\$)[^\$\n]+?\$', save_math, md_text)
 
-    # 2. Code Blocks
-    def code_repl(match):
-        lang = (match.group(1) or 'code').strip()
-        code = html.escape(match.group(2).strip('\n'))
-        return f'<div class="language-{lang} highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{code}</code></pre></div></div>'
-    
-    md_text = re.sub(r'```([a-zA-Z0-9_\+#\s]*)\n(.*?)```', code_repl, md_text, flags=re.DOTALL)
-    
-    # 3. Headings
+    # 2. Stash Code Blocks (Protects all indentation, line breaks, and characters)
+    code_placeholders = []
+    def save_code(match):
+        lang = (match.group(1) or 'plaintext').strip().lower()
+        if not lang:
+            lang = 'plaintext'
+        code = html.escape(match.group(2).strip('\r\n'))
+        rendered = f'<div class="language-{lang} highlighter-rouge"><div class="highlight"><pre class="highlight"><code class="language-{lang}">{code}</code></pre></div></div>'
+        idx = len(code_placeholders)
+        code_placeholders.append(rendered)
+        return f'\n\nXYZCODEBLOCKPLACEHOLDER{idx}ZYX\n\n'
+
+    md_text = re.sub(r'```([a-zA-Z0-9_\+#-]*)[^\S\r\n]*\r?\n(.*?)```', save_code, md_text, flags=re.DOTALL)
+
+    # 3. Stash Inline Code (Protects backticked text from bold/italic regex)
+    inline_placeholders = []
+    def save_inline(match):
+        idx = len(inline_placeholders)
+        inline_placeholders.append(f'<code>{html.escape(match.group(1))}</code>')
+        return f'XYZINLINECODEPLACEHOLDER{idx}ZYX'
+
+    md_text = re.sub(r'`([^`\n]+)`', save_inline, md_text)
+
+    # 4. Headings
     md_text = re.sub(r'^####\s+(.+)$', r'<h4>\1</h4>', md_text, flags=re.MULTILINE)
     md_text = re.sub(r'^###\s+(.+)$', r'<h3>\1</h3>', md_text, flags=re.MULTILINE)
     md_text = re.sub(r'^##\s+(.+)$', r'<h2>\1</h2>', md_text, flags=re.MULTILINE)
     md_text = re.sub(r'^#\s+(.+)$', r'<h1>\1</h1>', md_text, flags=re.MULTILINE)
-    
-    # 4. Bold & Italic (protect words with internal underscores like filenames)
+
+    # 5. Bold & Italic (protect words with internal underscores like filenames)
     md_text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', md_text)
     md_text = re.sub(r'__(.+?)__', r'<strong>\1</strong>', md_text)
     md_text = re.sub(r'\*(.+?)\*', r'<em>\1</em>', md_text)
     md_text = re.sub(r'(?<![a-zA-Z0-9/._-])_([^_]+?)_(?![a-zA-Z0-9/._-])', r'<em>\1</em>', md_text)
-    md_text = re.sub(r'`([^`]+)`', r'<code>\1</code>', md_text)
     md_text = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', r'<img src="\2" alt="\1">', md_text)
     md_text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', md_text)
-    
-    # 5. Tables support
+
+    # 6. Tables support
     def parse_tables(text):
         lines = text.split('\n')
         out = []
@@ -106,12 +120,12 @@ def markdown_to_html(md_text):
 
     md_text = parse_tables(md_text)
 
-    # 6. Lists
+    # 7. Lists
     lines = md_text.split('\n')
     in_list = False
     new_lines = []
     for line in lines:
-        if re.match(r'^\s*[-*]\s+(.+)$', line):
+        if re.match(r'^\s*[-*]\s+(.+)$', line) and not line.strip().startswith('XYZCODEBLOCKPLACEHOLDER'):
             if not in_list:
                 new_lines.append('<ul>')
                 in_list = True
@@ -124,22 +138,30 @@ def markdown_to_html(md_text):
             new_lines.append(line)
     if in_list:
         new_lines.append('</ul>')
-    
-    # 7. Paragraphs
+
+    # 8. Paragraphs
     paragraphs = '\n'.join(new_lines).split('\n\n')
     processed_p = []
     for p in paragraphs:
         p = p.strip()
         if not p:
             continue
-        if p.startswith('<') and (p.startswith('<h') or p.startswith('<ul') or p.startswith('<div') or p.startswith('<blockquote') or p.startswith('<img') or p.startswith('<table')):
+        if p.startswith('XYZCODEBLOCKPLACEHOLDER') and p.endswith('ZYX'):
+            processed_p.append(p)
+        elif p.startswith('<') and (p.startswith('<h') or p.startswith('<ul') or p.startswith('<div') or p.startswith('<blockquote') or p.startswith('<img') or p.startswith('<table')):
             processed_p.append(p)
         else:
             processed_p.append(f'<p>{p.replace("\n", "<br>")}</p>')
             
     result = '\n'.join(processed_p)
 
-    # 8. Restore Math Placeholders
+    # 9. Restore Placeholders in order
+    for idx, block in enumerate(code_placeholders):
+        result = result.replace(f'XYZCODEBLOCKPLACEHOLDER{idx}ZYX', block)
+
+    for idx, inline in enumerate(inline_placeholders):
+        result = result.replace(f'XYZINLINECODEPLACEHOLDER{idx}ZYX', inline)
+
     for idx, math_content in enumerate(math_placeholders):
         result = result.replace(f'XYZMATHPLACEHOLDER{idx}ZYX', math_content)
 
@@ -194,6 +216,7 @@ def render_layout(layout_name, content, page_meta):
     rendered = rendered.replace("{{ site.title }}", "Vivek Soundararaj · Science, Tech, Finance, Economics & Photography")
     rendered = rendered.replace("{{ site.description }}", "Essays and notes on science, technology, finance, investing, economics, and photography.")
     rendered = rendered.replace("{{ '/css/main.css' | relative_url }}", "/css/main.css")
+    rendered = rendered.replace("{{ '/js/highlight.min.js' | relative_url }}", "/js/highlight.min.js")
     rendered = rendered.replace("{{ 'now' | date: \"%Y\" }}", "2026")
     
     words = len(content.split())
@@ -218,6 +241,9 @@ def render_layout(layout_name, content, page_meta):
     return rendered
 
 class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
+    def do_HEAD(self):
+        return self.do_GET()
+
     def do_GET(self):
         url_path = self.path.split('?')[0].rstrip('/')
         if not url_path:
@@ -226,7 +252,7 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
         posts = load_posts()
         
         # Static files (CSS, JS, images, SVGs, webp, fonts)
-        if self.path.startswith('/css/') or self.path.startswith('/images/') or self.path.endswith(('.css', '.js', '.png', '.jpg', '.jpeg', '.svg', '.gif', '.ico', '.webp', '.woff', '.woff2')):
+        if self.path.startswith(('/css/', '/images/', '/js/')) or self.path.endswith(('.css', '.js', '.png', '.jpg', '.jpeg', '.svg', '.gif', '.ico', '.webp', '.woff', '.woff2')):
             rel_path = self.path.lstrip('/').split('?')[0]
             local_file = BASE_DIR / rel_path
             if local_file.exists():

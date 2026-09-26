@@ -37,7 +37,7 @@ Here is a practical, code-first guide to ten essential design patterns—beginni
 The **Singleton Pattern** ensures that a class has only one instance while providing a global access point to it. It is commonly employed for connection pools, logging managers, thread pools, and hardware controllers.
 
 ### Structural Architecture
-```
+```text
 ┌──────────────────────────────────────┐
 │           Singleton Class            │
 ├──────────────────────────────────────┤
@@ -161,7 +161,7 @@ The **Flyweight Pattern** reduces memory footprint by sharing common, immutable 
 * **Extrinsic State:** Context-dependent, mutable data passed in from the client (e.g., order ID, timestamp, volume, execution price).
 
 ### Structural Architecture
-```
+```text
 ┌─────────────────────────────────┐
 │        FlyweightFactory         │ ◄── Caches & shares unique flyweights
 ├─────────────────────────────────┤
@@ -189,35 +189,51 @@ from typing import Dict, Tuple
 
 @dataclass(frozen=True, slots=True)
 class SecurityMetadata:
+    """Intrinsic State: Immutable and shared across millions of orders."""
     symbol: str
     exchange: str
     currency: str
 
 
 class SecurityFlyweightFactory:
+    """Factory managing the pool of unique Flyweight instances."""
     _pool: Dict[Tuple[str, str], SecurityMetadata] = {}
 
     @classmethod
     def get(cls, symbol: str, exchange: str, currency: str) -> SecurityMetadata:
         key = (symbol.upper(), exchange.upper())
         if key not in cls._pool:
-            cls._pool[key] = SecurityMetadata(symbol.upper(), exchange.upper(), currency.upper())
+            cls._pool[key] = SecurityMetadata(
+                symbol=symbol.upper(),
+                exchange=exchange.upper(),
+                currency=currency.upper(),
+            )
         return cls._pool[key]
 
 
 class Order:
+    """Extrinsic Context: Stores specific transaction state + Flyweight pointer."""
     __slots__ = ("order_id", "security", "price", "shares")
 
-    def __init__(self, order_id: int, security: SecurityMetadata, price: float, shares: int) -> None:
+    def __init__(
+        self,
+        order_id: int,
+        security: SecurityMetadata,
+        price: float,
+        shares: int,
+    ) -> None:
         self.order_id = order_id
         self.security = security  # Pointer to shared Flyweight
         self.price = price
         self.shares = shares
 
 
-# 100,000 orders share exactly ONE metadata object
+# Usage: 100,000 orders share exactly ONE metadata object
 aapl_meta = SecurityFlyweightFactory.get("AAPL", "NASDAQ", "USD")
-orders = [Order(i, aapl_meta, 180.0, 50) for i in range(100_000)]
+orders = [
+    Order(order_id=i, security=aapl_meta, price=180.0, shares=50)
+    for i in range(100_000)
+]
 assert orders[0].security is orders[99999].security
 ```
 
@@ -309,7 +325,7 @@ struct Order {
 The **Observer Pattern** defines a one-to-many relationship where a core subject (publisher) automatically broadcasts state changes or events to an arbitrary list of registered observers (subscribers) without knowing their concrete types.
 
 ### Structural Architecture
-```
+```text
 ┌──────────────────────────────────────┐
 │           Subject (Feed)             │
 ├──────────────────────────────────────┤
@@ -454,7 +470,7 @@ The **Registry Pattern** provides a centralized, decoupled catalog where compone
 It is heavily used in frameworks like **Spring** (bean registry), **PyTorch** (model registry), and **FastAPI** (router registry).
 
 ### Structural Architecture
-```
+```text
 ┌──────────────────────────────────────────────┐
 │                   Registry                   │
 ├──────────────────────────────────────────────┤
@@ -482,27 +498,37 @@ class ParserRegistry:
 
     @classmethod
     def register(cls, key: str) -> Callable[[Type["BaseParser"]], Type["BaseParser"]]:
+        """Class decorator for self-registering parser subclasses."""
         def decorator(subclass: Type["BaseParser"]) -> Type["BaseParser"]:
             cls._catalog[key.lower()] = subclass
             return subclass
+
         return decorator
 
     @classmethod
     def create(cls, key: str, *args: Any, **kwargs: Any) -> "BaseParser":
         parser_cls = cls._catalog.get(key.lower())
         if not parser_cls:
-            raise KeyError(f"Unknown parser: '{key}'. Available: {list(cls._catalog.keys())}")
+            available = ", ".join(cls._catalog.keys())
+            raise KeyError(f"Unknown parser: '{key}'. Available: [{available}]")
         return parser_cls(*args, **kwargs)
 
 
 class BaseParser:
-    pass
+    def parse(self, text: str) -> str:
+        raise NotImplementedError
 
 
 @ParserRegistry.register("json")
 class JsonParser(BaseParser):
     def parse(self, text: str) -> str:
-        return f"Parsed JSON from {text}"
+        return f"Parsed JSON data: '{text}'"
+
+
+@ParserRegistry.register("csv")
+class CsvParser(BaseParser):
+    def parse(self, text: str) -> str:
+        return f"Parsed CSV rows: '{text}'"
 
 
 # Dynamic factory instantiation
@@ -708,27 +734,41 @@ from typing import List, Optional
 
 
 class Query:
-    def __init__(self, table: str, columns: List[str], limit: Optional[int]) -> None:
+    def __init__(
+        self,
+        table: str,
+        columns: List[str],
+        filters: List[str],
+        limit: Optional[int],
+    ) -> None:
         self.table = table
         self.columns = columns
+        self.filters = filters
         self.limit = limit
 
     def to_sql(self) -> str:
         cols = ", ".join(self.columns) if self.columns else "*"
         sql = f"SELECT {cols} FROM {self.table}"
-        if self.limit:
+        if self.filters:
+            sql += f" WHERE {' AND '.join(self.filters)}"
+        if self.limit is not None:
             sql += f" LIMIT {self.limit}"
-        return sql + ";"
+        return f"{sql};"
 
 
 class QueryBuilder:
     def __init__(self, table: str) -> None:
         self._table = table
         self._columns: List[str] = []
+        self._filters: List[str] = []
         self._limit: Optional[int] = None
 
     def select(self, *columns: str) -> "QueryBuilder":
         self._columns.extend(columns)
+        return self
+
+    def where(self, condition: str) -> "QueryBuilder":
+        self._filters.append(condition)
         return self
 
     def limit(self, count: int) -> "QueryBuilder":
@@ -736,10 +776,24 @@ class QueryBuilder:
         return self
 
     def build(self) -> Query:
-        return Query(self._table, self._columns, self._limit)
+        return Query(
+            table=self._table,
+            columns=self._columns,
+            filters=self._filters,
+            limit=self._limit,
+        )
 
 
-sql = QueryBuilder("users").select("id", "username").limit(10).build().to_sql()
+# Usage: Multi-line fluent method chaining
+sql = (
+    QueryBuilder("users")
+    .select("id", "username", "email")
+    .where("status = 'ACTIVE'")
+    .where("created_at > '2026-01-01'")
+    .limit(20)
+    .build()
+    .to_sql()
+)
 ```
 
 #### Java (Static Inner Builder - Effective Java)
@@ -846,24 +900,39 @@ The **Adapter Pattern** translates the interface of an existing, legacy, or thir
 
 #### Python
 ```python
+from abc import ABC, abstractmethod
+import xml.etree.ElementTree as ET
+
+
 class LegacyXmlService:
+    """Adaptee: Third-party service returning raw XML."""
     def get_xml(self) -> str:
         return "<data><price>150.25</price></data>"
 
 
-class PriceTarget:
+class PriceTarget(ABC):
+    """Target interface expected by client code."""
+    @abstractmethod
     def get_price(self) -> float:
-        raise NotImplementedError
+        pass
 
 
 class XmlPriceAdapter(PriceTarget):
+    """Adapter bridging LegacyXmlService to PriceTarget."""
     def __init__(self, legacy: LegacyXmlService) -> None:
         self._legacy = legacy
 
     def get_price(self) -> float:
-        import xml.etree.ElementTree as ET
         root = ET.fromstring(self._legacy.get_xml())
-        return float(root.find("price").text)
+        price_elem = root.find("price")
+        if price_elem is None or price_elem.text is None:
+            raise ValueError("Malformed XML: missing price tag")
+        return float(price_elem.text)
+
+
+# Usage
+adapter = XmlPriceAdapter(LegacyXmlService())
+print(f"Price via adapter: ${adapter.get_price():.2f}")
 ```
 
 #### Java (Object Adapter Composition)
@@ -1043,22 +1112,36 @@ The **Strategy Pattern** encapsulates a family of algorithms into interchangeabl
 from typing import Callable, List
 
 
-def bubble_sort(data: List[int]) -> List[int]:
-    res = list(data)
-    # Sorting logic...
-    return sorted(res)
+# Strategies encapsulated as clean, testable callables
+def vwap_execution_strategy(prices: List[float]) -> str:
+    avg = sum(prices) / len(prices)
+    return f"VWAP execution filled at avg price: ${avg:.2f}"
 
 
-def quick_sort(data: List[int]) -> List[int]:
-    return sorted(data)
+def limit_passive_strategy(prices: List[float]) -> str:
+    best = min(prices)
+    return f"Passive limit order placed at best bid: ${best:.2f}"
 
 
-class SortContext:
-    def __init__(self, strategy: Callable[[List[int]], List[int]]) -> None:
+class OrderRouter:
+    def __init__(self, strategy: Callable[[List[float]], str]) -> None:
         self.strategy = strategy
 
-    def execute(self, items: List[int]) -> List[int]:
-        return self.strategy(items)
+    def set_strategy(self, strategy: Callable[[List[float]], str]) -> None:
+        self.strategy = strategy
+
+    def route_order(self, book_depth: List[float]) -> str:
+        return self.strategy(book_depth)
+
+
+# Usage
+depth = [142.10, 142.25, 142.50, 142.80]
+router = OrderRouter(strategy=vwap_execution_strategy)
+print(router.route_order(depth))
+
+# Swap execution algorithm dynamically at runtime
+router.set_strategy(limit_passive_strategy)
+print(router.route_order(depth))
 ```
 
 #### Java (Functional Interface & Method References)
@@ -1141,7 +1224,7 @@ The **Chain of Responsibility Pattern** passes a request along a sequential pipe
 #### Python
 ```python
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Dict, Optional
 
 
 class Handler(ABC):
@@ -1150,20 +1233,38 @@ class Handler(ABC):
 
     def set_next(self, handler: "Handler") -> "Handler":
         self._next = handler
-        return handler
+        return handler  # Enables fluent chaining: h1.set_next(h2).set_next(h3)
 
     @abstractmethod
-    def handle(self, req: dict) -> Optional[str]:
-        if self._next:
-            return self._next.handle(req)
+    def handle(self, request: Dict[str, Any]) -> Optional[str]:
+        if self._next is not None:
+            return self._next.handle(request)
         return None
 
 
-class AuthHandler(Handler):
-    def handle(self, req: dict) -> Optional[str]:
-        if not req.get("authenticated"):
-            return "401 Unauthorized"
-        return super().handle(req)
+class AuthenticationHandler(Handler):
+    def handle(self, request: Dict[str, Any]) -> Optional[str]:
+        token = request.get("token")
+        if token != "secret-token":
+            return "401 Unauthorized: Invalid API Token"
+        return super().handle(request)
+
+
+class RoleValidationHandler(Handler):
+    def handle(self, request: Dict[str, Any]) -> Optional[str]:
+        role = request.get("role")
+        if role != "ADMIN":
+            return "403 Forbidden: Administrator role required"
+        return super().handle(request)
+
+
+# Usage
+pipeline = AuthenticationHandler()
+pipeline.set_next(RoleValidationHandler())
+
+request = {"token": "secret-token", "role": "ADMIN"}
+result = pipeline.handle(request)
+print(f"Pipeline Result: {'SUCCESS' if result is None else result}")
 ```
 
 #### Java (Middleware Pipeline)
@@ -1257,7 +1358,7 @@ public:
 
 ## Architectural Decision Matrix
 
-```
+```text
                         WHAT IS YOUR ARCHITECTURAL PROBLEM?
                                          │
          ┌───────────────────────────────┼───────────────────────────────┐
