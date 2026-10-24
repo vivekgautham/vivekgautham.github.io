@@ -209,7 +209,24 @@ def render_layout(layout_name, content, page_meta):
     
     rendered = layout_template
     page_title = page_meta.get('title', 'Vivek Soundararaj')
+    page_desc = page_meta.get('description', 'Essays and notes on science, technology, finance, investing, economics, and photography.')
+    
+    # Render title conditional
+    rendered = re.sub(
+        r'\{%\s*if\s+page\.title\s+and\s+page\.title\s*!=\s*site\.title\s*%\}.*?\{%\s*else\s*%\}.*?\{%\s*endif\s*%\}',
+        f"{page_title} · Vivek Soundararaj" if "Vivek Soundararaj" not in page_title else page_title,
+        rendered,
+        flags=re.DOTALL
+    )
+    # Render description conditional
+    rendered = re.sub(
+        r'\{%\s*if\s+page\.description\s*%\}.*?\{%\s*elsif\s+page\.excerpt\s*%\}.*?\{%\s*else\s*%\}.*?\{%\s*endif\s*%\}',
+        page_desc,
+        rendered,
+        flags=re.DOTALL
+    )
     rendered = rendered.replace("{{ page.title }}", page_title)
+    rendered = rendered.replace("{{ page.description }}", page_desc)
     rendered = rendered.replace("{{ page.date | date: \"%B %d, %Y\" }}", page_meta.get('date_formatted', ''))
     rendered = rendered.replace("{{ page.date | date_to_string }}", page_meta.get('date_formatted', ''))
     rendered = rendered.replace("{{ site.name }}", "Vivek Soundararaj")
@@ -347,7 +364,9 @@ class JekyllPreviewHandler(http.server.SimpleHTTPRequestHandler):
             projects_file = BASE_DIR / 'projects' / 'index.html'
             raw = projects_file.read_text(encoding='utf-8')
             fm, body = parse_frontmatter(raw)
-            full_html = render_layout('default', body, {'title': fm.get('title', 'Projects & Tools · Vivek Soundararaj'), 'url': '/projects'})
+            page_title = fm.get('title', 'Projects & Interactive Tools · Vivek Soundararaj')
+            page_desc = fm.get('description', 'Interactive web applications, financial simulators, and open data explorers by Vivek Soundararaj.')
+            full_html = render_layout('default', body, {'title': page_title, 'description': page_desc, 'url': '/projects'})
             self.send_response(200)
             self.send_header('Content-Type', 'text/html; charset=utf-8')
             self.end_headers()
