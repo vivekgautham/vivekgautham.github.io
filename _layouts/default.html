@@ -47,7 +47,7 @@
   <div class="site-wrapper">
     <!-- Header Navigation -->
     <header class="site-header">
-      <div class="site-container">
+      <div class="site-container{% if page.url contains '/projects' %} site-container-wide{% endif %}">
         <div class="header-inner">
           <a href="/" class="site-brand" title="Vivek Soundararaj Home">
             <span class="brand-avatar">VS</span>
@@ -87,14 +87,14 @@
 
     <!-- Main Content -->
     <main class="site-main">
-      <div class="site-container">
+      <div class="site-container{% if page.url contains '/projects' %} site-container-wide{% endif %}">
         {{ content }}
       </div>
     </main>
 
     <!-- Footer -->
     <footer class="site-footer">
-      <div class="site-container">
+      <div class="site-container{% if page.url contains '/projects' %} site-container-wide{% endif %}">
         <div class="footer-inner">
           <div class="footer-top">
             <div class="footer-brand">Vivek Soundararaj</div>

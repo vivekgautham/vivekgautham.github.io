@@ -46,6 +46,7 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   
   --site-max-width: 1080px;
+  --site-max-width-wide: min(1420px, 94vw);
   --header-height: 68px;
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -148,6 +149,12 @@ a:focus-visible, button:focus-visible {
   max-width: var(--site-max-width);
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+
+.site-container.site-container-wide,
+.site-container:has(.projects-grid) {
+  max-width: var(--site-max-width-wide, min(1420px, 94vw));
+  padding: 0 clamp(1rem, 2.5vw, 2.25rem);
 }
 
 .site-main {
