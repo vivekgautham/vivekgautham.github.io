@@ -247,6 +247,7 @@ def render_layout(layout_name, content, page_meta):
     rendered = re.sub(r'\{%\s*if\s+page\.url\s*==\s*\'/\'\s*or\s+page\.url\s*==\s*\'\'\s*%\}\s*active\s*\{%\s*endif\s*%\}', 'active' if cur_url in ['/', ''] else '', rendered)
     rendered = re.sub(r'\{%\s*if\s+page\.url\s+contains\s+\'/blog\'\s*%\}\s*active\s*\{%\s*endif\s*%\}', 'active' if '/blog' in cur_url else '', rendered)
     rendered = re.sub(r'\{%\s*if\s+page\.url\s+contains\s+\'/projects\'\s*%\}\s*active\s*\{%\s*endif\s*%\}', 'active' if '/projects' in cur_url else '', rendered)
+    rendered = re.sub(r'\{%\s*if\s+page\.url\s+contains\s+\'/projects\'\s*%\}\s*site-container-wide\s*\{%\s*endif\s*%\}', ' site-container-wide' if '/projects' in cur_url else '', rendered)
     rendered = re.sub(r'\{%\s*if.*?%\}.*?\{%\s*endif\s*%\}', '', rendered, flags=re.DOTALL)
     rendered = re.sub(r'\{%.*?%\}', '', rendered)
     rendered = re.sub(r'\{\{.*?\}\}', '', rendered)
