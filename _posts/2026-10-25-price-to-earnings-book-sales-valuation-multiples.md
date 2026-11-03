@@ -197,7 +197,7 @@ $$\text{P/NWC} = \frac{\text{Market Capitalization}}{\text{Net Working Capital}}
 ### D. The Classic "Net-Net" (Price to NCAV)
 Pioneered by Benjamin Graham (Warren Buffett's mentor), **Net Current Asset Value (NCAV)** is the ultimate worst-case liquidation calculation:
 
-$$\text{NCAV} = \text{Current Assets} - \text{Total Liabilities (ALL debts, both short & long term)}$$
+$$\text{NCAV} = \text{Current Assets} - \text{Total Liabilities (ALL debts, both short \& long term)}$$
 
 Graham assumed all factories, land, and equipment were worth **$0**. If a stock traded below its NCAV ($\text{P/NCAV} < 1.0$), he considered it a guaranteed bargain—you were getting all the physical buildings and future profits completely free.
 
