@@ -38,17 +38,7 @@ def parse_frontmatter(content):
     return {}, content
 
 def markdown_to_html(md_text):
-    math_placeholders = []
-    def save_math(match):
-        idx = len(math_placeholders)
-        math_placeholders.append(match.group(0))
-        return f'XYZMATHPLACEHOLDER{idx}ZYX'
-
-    # 1. Stash Display Math ($$...$$) and Inline Math ($...$)
-    md_text = re.sub(r'\$\$[\s\S]*?\$\$', save_math, md_text)
-    md_text = re.sub(r'(?<!\$)\$(?!\$)[^\$\n]+?\$', save_math, md_text)
-
-    # 2. Stash Code Blocks (Protects all indentation, line breaks, and characters)
+    # 1. Stash Code Blocks (Protects all indentation, line breaks, and characters)
     code_placeholders = []
     def save_code(match):
         lang = (match.group(1) or 'plaintext').strip().lower()
@@ -62,7 +52,7 @@ def markdown_to_html(md_text):
 
     md_text = re.sub(r'```([a-zA-Z0-9_\+#-]*)[^\S\r\n]*\r?\n(.*?)```', save_code, md_text, flags=re.DOTALL)
 
-    # 3. Stash Inline Code (Protects backticked text from bold/italic regex)
+    # 2. Stash Inline Code (Protects backticked text from bold/italic regex)
     inline_placeholders = []
     def save_inline(match):
         idx = len(inline_placeholders)
@@ -70,6 +60,19 @@ def markdown_to_html(md_text):
         return f'XYZINLINECODEPLACEHOLDER{idx}ZYX'
 
     md_text = re.sub(r'`([^`\n]+)`', save_inline, md_text)
+
+    # 3. Protect Currency ($ followed by digit) from KaTeX / inline math parsers
+    md_text = re.sub(r'(^|[^\w\\])(?:\\)?\$([0-9])', r'\g<1><span class="no-math">&#36;</span>\g<2>', md_text)
+
+    # 4. Stash Display Math ($$...$$) and Inline Math ($...$)
+    math_placeholders = []
+    def save_math(match):
+        idx = len(math_placeholders)
+        math_placeholders.append(match.group(0))
+        return f'XYZMATHPLACEHOLDER{idx}ZYX'
+
+    md_text = re.sub(r'\$\$[\s\S]*?\$\$', save_math, md_text)
+    md_text = re.sub(r'(?<![\\\$])\$(?!\s)([^\$\n\|]+?)(?<![\s\\])\$(?!\$)', save_math, md_text)
 
     # 4. Headings
     md_text = re.sub(r'^####\s+(.+)$', r'<h4>\1</h4>', md_text, flags=re.MULTILINE)
@@ -90,16 +93,23 @@ def markdown_to_html(md_text):
         lines = text.split('\n')
         out = []
         i = 0
+        def split_cells(raw_l):
+            s = raw_l.strip()
+            if s.startswith('|'):
+                s = s[1:]
+            if s.endswith('|'):
+                s = s[:-1]
+            return [c.strip() for c in s.split('|')]
+
         while i < len(lines):
             line = lines[i]
             if '|' in line and i + 1 < len(lines) and re.match(r'^\s*\|?\s*[-:]+[-| :]*\s*\|?\s*$', lines[i+1]):
-                headers = [h.strip() for h in line.strip('| \t').split('|')]
+                headers = split_cells(line)
                 align_line = lines[i+1]
                 i += 2
                 rows = []
                 while i < len(lines) and '|' in lines[i] and lines[i].strip():
-                    row = [c.strip() for c in lines[i].strip('| \t').split('|')]
-                    rows.append(row)
+                    rows.append(split_cells(lines[i]))
                     i += 1
                 
                 tbl_html = ['<div class="table-wrapper"><table><thead><tr>']
@@ -120,24 +130,43 @@ def markdown_to_html(md_text):
 
     md_text = parse_tables(md_text)
 
-    # 7. Lists
+    # 7. Lists (ordered and unordered)
     lines = md_text.split('\n')
-    in_list = False
+    in_ul = False
+    in_ol = False
     new_lines = []
     for line in lines:
-        if re.match(r'^\s*[-*]\s+(.+)$', line) and not line.strip().startswith('XYZCODEBLOCKPLACEHOLDER'):
-            if not in_list:
+        ul_match = re.match(r'^\s*[-*]\s+(.+)$', line)
+        ol_match = re.match(r'^\s*(\d+)\.\s+(.+)$', line)
+        
+        if ul_match and not line.strip().startswith('XYZCODEBLOCKPLACEHOLDER'):
+            if in_ol:
+                new_lines.append('</ol>')
+                in_ol = False
+            if not in_ul:
                 new_lines.append('<ul>')
-                in_list = True
-            item_text = re.sub(r'^\s*[-*]\s+', '', line)
-            new_lines.append(f'  <li>{item_text}</li>')
-        else:
-            if in_list:
+                in_ul = True
+            new_lines.append(f'  <li>{ul_match.group(1)}</li>')
+        elif ol_match and not line.strip().startswith('XYZCODEBLOCKPLACEHOLDER'):
+            if in_ul:
                 new_lines.append('</ul>')
-                in_list = False
+                in_ul = False
+            if not in_ol:
+                new_lines.append('<ol>')
+                in_ol = True
+            new_lines.append(f'  <li>{ol_match.group(2)}</li>')
+        else:
+            if in_ul:
+                new_lines.append('</ul>')
+                in_ul = False
+            if in_ol:
+                new_lines.append('</ol>')
+                in_ol = False
             new_lines.append(line)
-    if in_list:
+    if in_ul:
         new_lines.append('</ul>')
+    if in_ol:
+        new_lines.append('</ol>')
 
     # 8. Paragraphs
     paragraphs = '\n'.join(new_lines).split('\n\n')
@@ -148,7 +177,7 @@ def markdown_to_html(md_text):
             continue
         if p.startswith('XYZCODEBLOCKPLACEHOLDER') and p.endswith('ZYX'):
             processed_p.append(p)
-        elif p.startswith('<') and (p.startswith('<h') or p.startswith('<ul') or p.startswith('<div') or p.startswith('<blockquote') or p.startswith('<img') or p.startswith('<table')):
+        elif p.startswith('<') and (p.startswith('<h') or p.startswith('<ul') or p.startswith('<ol') or p.startswith('<div') or p.startswith('<blockquote') or p.startswith('<img') or p.startswith('<table')):
             processed_p.append(p)
         else:
             processed_p.append(f'<p>{p.replace("\n", "<br>")}</p>')

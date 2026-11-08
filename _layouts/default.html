@@ -24,7 +24,52 @@
   <!-- KaTeX for Math Rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true}], ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'], throwOnError: false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function runKaTeX() {
+        if (typeof renderMathInElement === 'undefined') {
+          setTimeout(runKaTeX, 30);
+          return;
+        }
+        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+          acceptNode: function(node) {
+            var parent = node.parentElement;
+            if (!parent) return NodeFilter.FILTER_REJECT;
+            var tag = parent.tagName.toLowerCase();
+            if (['script', 'noscript', 'style', 'textarea', 'pre', 'code'].indexOf(tag) !== -1) {
+              return NodeFilter.FILTER_REJECT;
+            }
+            if (parent.closest('.no-math, pre, code')) {
+              return NodeFilter.FILTER_REJECT;
+            }
+            return /(?:^|[^\w\\])(?:\\)?\$[0-9]/.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+          }
+        });
+        var nodesToReplace = [];
+        while (walker.nextNode()) {
+          nodesToReplace.push(walker.currentNode);
+        }
+        nodesToReplace.forEach(function(node) {
+          var span = document.createElement('span');
+          span.innerHTML = node.nodeValue.replace(/(^|[^\w\\])(?:\\)?\$([0-9])/g, '$1<span class="no-math">&#36;</span>$2');
+          node.parentNode.replaceChild(span, node);
+        });
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+          ],
+          ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+          ignoredClasses: ['no-math'],
+          throwOnError: false
+        });
+      }
+      runKaTeX();
+    });
+  </script>
 
   <!-- Highlight.js for Syntax Highlighting (Local with CDN Fallback) -->
   <script src="{{ '/js/highlight.min.js' | relative_url }}"></script>
