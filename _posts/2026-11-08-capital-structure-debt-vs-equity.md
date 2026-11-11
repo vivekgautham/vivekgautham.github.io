@@ -12,11 +12,13 @@ You have two fundamental ways to raise that capital:
 
 ### Option A: Debt (A Commercial Bank Loan)
 You borrow \$100,000 from a bank at a 7% fixed interest rate (\$7,000/year). 
+
 - **In a boom year:** If your truck is wildly successful and makes \$150,000 in net profit, the bank **still only gets \$7,000**. You keep the entire remaining \$143,000.
 - **In a bust year:** If bad weather strikes and you make \$0, the bank **still demands its \$7,000**. If you miss the payment, they seize your truck.
 
 ### Option B: Equity (Selling 50% to a Partner)
 A partner gives you \$100,000 in exchange for **50% of the company forever**.
+
 - **In a bust year:** If you make \$0, your partner gets \$0. You never get evicted, defaulted, or forced into bankruptcy.
 - **In a boom year:** If your food truck turns into a nationwide franchise generating \$10,000,000 a year, your partner takes **\$5,000,000 every single year**, forever—even if they never step foot in the kitchen again.
 
@@ -244,7 +246,10 @@ Measures the balance of financing between creditors and owners:
 
 $$\text{Debt-to-Equity} = \frac{\text{Total Debt}}{\text{Total Shareholders' Equity}}$$
 
-- **Interpretation:** A D/E of $0.5\times$ means 50 cents of debt for every \$1 of equity. A D/E above $2.0\times$ or $3.0\times$ warrants extra scrutiny unless the business has exceptionally defensive recurring cash flows.
+**How to interpret:**
+
+- **0.5×:** Conservative. Represents 50 cents of debt for every \$1 of equity.
+- **Above 2.0× to 3.0×:** Warrants extra scrutiny unless the business has exceptionally defensive, recurring cash flows (e.g., regulated utilities).
 
 ---
 
@@ -255,10 +260,11 @@ $$\text{Net Debt} = \text{Total Debt} - \text{Cash and Short-Term Investments}$$
 
 $$\text{Leverage Ratio} = \frac{\text{Net Debt}}{\text{EBITDA}}$$
 
-- **Interpretation:** 
-  - **$< 1.5\times$:** Very conservative, clean balance sheet.
-  - **$2.0\times – 3.0\times$:** Normal for healthy, stable corporate businesses.
-  - **$> 4.0\times – 5.0\times$:** Highly leveraged; characteristic of Private Equity LBOs (Leveraged Buyouts) or distressed situations.
+**How to interpret:**
+
+- **< 1.5×:** Very conservative, clean balance sheet.
+- **2.0× – 3.0×:** Normal range for healthy, stable corporate businesses.
+- **> 4.0× – 5.0×:** Highly leveraged; characteristic of Private Equity LBOs (Leveraged Buyouts) or distressed situations.
 
 ---
 
@@ -267,9 +273,11 @@ Measures how easily the company's operating profit covers its mandatory debt ser
 
 $$\text{Interest Coverage Ratio} = \frac{\text{Operating Profit (EBIT)}}{\text{Annual Interest Expense}}$$
 
-- **Interpretation:**
-  - If a company generates \$100M EBIT and pays \$10M in interest, its coverage is **$10\times$** (bulletproof cushion).
-  - If coverage drops below **$2.5\times$**, any minor bump in the road (a sales slump or a refinance at higher interest rates) threatens insolvency.
+**How to interpret:**
+
+- **10× (or higher):** Bulletproof cushion. For example, if a company generates \$100M EBIT and pays \$10M in interest, its coverage is **10×**.
+- **Below 2.5×:** Warning territory. Any minor bump in the road (such as a sales slump or refinancing debt at higher interest rates) threatens insolvency.
+- **Below 1.0×:** Critical distress. Operating income does not even cover the interest payments.
 
 ---
 
